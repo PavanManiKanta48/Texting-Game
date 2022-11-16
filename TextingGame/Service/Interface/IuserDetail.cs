@@ -10,8 +10,8 @@ namespace Service.Interface
    public interface IuserDetail
     {
         List<TblUserDetail> GetUser();
-        bool Register(TblUserDetail tblUser);
-        bool UpdateUserDetail(TblUserDetail tblUser);
-        bool DeleteUserDetail(TblUserDetail tblUser);
+        bool CheckUserExist(string email);
+        void Register(Register register);
+        bool UserLogIn(UserLogin login);
     }
 }

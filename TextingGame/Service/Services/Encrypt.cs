@@ -9,7 +9,16 @@ namespace Service.Services
 {
     public class Encrypt : IEncrypt
     {
-        public string Decrypt_Password(string encodedData)
+        //.......Encrypt Form.............//
+        public string EncodePasswordToBase64(string password)
+        { 
+                byte[] encData_byte = new byte[password.Length];
+                encData_byte = System.Text.Encoding.UTF8.GetBytes(password);
+                string encodedData = Convert.ToBase64String(encData_byte);
+                return encodedData;
+        }
+        //.......Decrypt Form...........//
+        public string DecodeFrom64(string encodedData)
         {
             System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
             System.Text.Decoder utf8Decode = encoder.GetDecoder();

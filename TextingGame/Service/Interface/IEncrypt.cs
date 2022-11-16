@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Service.Interface
 {
     public interface IEncrypt
-    { 
-        string Decrypt_Password(string encodedData);
+    {
+        string EncodePasswordToBase64(string password);
+        string DecodeFrom64(string encodedData);
     }
 }
