@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using Persistence;
 using Service.Interface;
 using System;
@@ -10,52 +11,49 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class UserDetail :Encrypt,IuserDetail
-{
+    //..............Dependencies Injection................//
+    public class UserDetail : Encrypt, IuserDetail
+    {
         private readonly DbTextingGameContext _dbContext;
-        public UserDetail(DbTextingGameContext dbContext)
+        private readonly IEncrypt _encrypt;
+        public UserDetail(DbTextingGameContext dbContext, IEncrypt encrypt)
         {
             _dbContext = dbContext;
+            _encrypt = encrypt;
         }
+        //...........fetch User detail.........//
         public List<TblUserDetail> GetUser()
         {
             var users = _dbContext.TblUserDetails.ToList();
             return users;
         }
-        public bool Register(TblUserDetail tblUser)
+        //............Check User Email...........// 
+        public bool CheckUserExist(string email)
         {
-            var email = _dbContext.TblUserDetail.Find(tblUser.EmailId);
-            if (email != null)
-            {
-                return false;
-            }
-            else
-            {
-                _dbContext.TblUserDetail.Add(tblUser);
-                var password = _dbContext.TblUserDetail.Find(tblUser.Password);
-                if (password != null)
-                {
-                    Encrypt encrypt = new Encrypt();
-                    encrypt.Decrypt_Password(tblUser.Password);
-                }
-                _dbContext.SaveChanges();
-                return true;
-            }
+            var user = _dbContext.TblUserDetails.Where(x => x.EmailId == email).FirstOrDefault();
+            return user != null;
         }
-        public bool UpdateUserDetail(TblUserDetail tblUser)
+        //............Check Password .................//
+        public void Register(Register register)
         {
-            _dbContext.TblUserDetails.Update(tblUser);
+            Encrypt encrypt1 = new Encrypt();
+            string encryptPassword = encrypt1.EncodePasswordToBase64(register.Password!);
+            register.Password = encryptPassword;
+            register.CreatedDate = DateTime.Now;
+            register.UpdatedDate = null;
+            _dbContext.TblUserDetails.Add(register);
             _dbContext.SaveChanges();
-            return true;
         }
-        public bool DeleteUserDetail(TblUserDetail tblUser)
+        //...........User Login.....................//
+        public bool UserLogIn(UserLogin login)
         {
-           _dbContext.Remove(tblUser);
-            return true;
+            string encryptPassword = _encrypt.EncodePasswordToBase64(login.Password!);
+            var user1 = _dbContext.TblUserDetails.Where(x => x.EmailId == login.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
+           if (user1 != null)
+            {
+                return true;
+            }              
+            return false;
         }
-    }
-
-    internal class _DbTextingGameContext
-    {
     }
 }
