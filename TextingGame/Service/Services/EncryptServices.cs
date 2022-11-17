@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class EncryptServices : IEncrypt
+    public class EncryptServices : IEncryptServices
     {
         //.......Encrypt Form.............//
         public string EncodePasswordToBase64(string password)

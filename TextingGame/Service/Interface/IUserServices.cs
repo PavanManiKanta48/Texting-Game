@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Service.Interface
 {
-   public interface IuserDetail
+   public interface IUserServices
     {
-        List<TblUserDetail> GetUser();
+        List<TblUserDetail> GetUsers();
         bool CheckUserExist(string email);
         void Register(Register register);
         bool UserLogIn(UserLogin login);
-        CrudStatus ForgetPassword(ChangePassword changePwd);
+        CrudStatus ForgetPassword(Register changePwd);
     }
 }

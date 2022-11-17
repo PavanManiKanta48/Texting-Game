@@ -1,7 +1,9 @@
-﻿using Domain;
+﻿using Azure.Messaging;
+using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using Persistence;
 using Service.Interface;
 
@@ -12,28 +14,27 @@ namespace API.Controllers
     public class UserController : ControllerBase
     {
         private readonly DbTextingGameContext _dbContext;
-        private readonly IuserDetail userService;
-        public UserController(DbTextingGameContext dbContext, IuserDetail iuserDetail)
+        private readonly IUserServices userService;
+        public UserController(DbTextingGameContext dbContext, IUserServices iuserDetail)
         {
             _dbContext = dbContext;
             userService = iuserDetail;
         }
-        // GET: api/<UserController>
-        [HttpGet]
-        [Route("FetchUserDetail")]
-        public JsonResult GetUserDetail()
+       
+        [HttpGet]        
+        public JsonResult GetUsers()
         {
             try
             {
-                return new JsonResult(userService.GetUser().ToList());
+                return new JsonResult(userService.GetUsers().ToList());
             }
             catch (Exception ex)
             {
                 return new JsonResult(ex.Message);
             }
         }
-        [HttpPost()]
-        [Route("UserRegister")]
+
+        [HttpPost("UserRegister")]        
         public JsonResult UserRegister(Register register)
         {
             try
@@ -61,7 +62,8 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
-        [HttpPost()]
+
+        [HttpPost]
         [Route("LogIn")]
         public JsonResult LogIn(UserLogin logIn)
         {
@@ -74,20 +76,19 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
-        [HttpPut]
-        [Route("ForgetPassword")]
-        public JsonResult ForgetPassword(string Mail, ChangePassword changePwd)
+
+        [HttpPut("ForgetPassword")]        
+        public JsonResult ForgetPassword(string Mail, Register changePwd)
         {
             try
             {
-                changePwd.EmailId = Mail;
-                return new JsonResult(userService.ForgetPassword(changePwd));
+               changePwd.EmailId=Mail;
+                return new JsonResult(userService.ForgetPassword(changePwd));             
             }
             catch (Exception ex)
             {
                 return new JsonResult(ex.Message);
             }
         }
-
     }
 }
