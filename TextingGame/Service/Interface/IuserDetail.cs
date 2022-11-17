@@ -13,5 +13,6 @@ namespace Service.Interface
         bool CheckUserExist(string email);
         void Register(Register register);
         bool UserLogIn(UserLogin login);
+        CrudStatus ForgetPassword(ChangePassword changePwd);
     }
 }

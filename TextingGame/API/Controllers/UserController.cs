@@ -61,7 +61,7 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
-           [HttpPost()]
+        [HttpPost()]
         [Route("LogIn")]
         public JsonResult LogIn(UserLogin logIn)
         {
@@ -74,5 +74,20 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
+        [HttpPut]
+        [Route("ForgetPassword")]
+        public JsonResult ForgetPassword(string Mail, ChangePassword changePwd)
+        {
+            try
+            {
+                changePwd.EmailId = Mail;
+                return new JsonResult(userService.ForgetPassword(changePwd));
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex.Message);
+            }
+        }
+
     }
 }
