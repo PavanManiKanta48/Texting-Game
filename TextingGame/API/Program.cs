@@ -7,7 +7,6 @@ using Service.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddControllers();
 builder.Services.AddControllersWithViews().AddNewtonsoftJson
@@ -17,9 +16,9 @@ var connectionString = builder.Configuration.GetConnectionString("DbCon");
 builder.Services.AddDbContext<DbTextingGameContext>(option =>
 option.UseSqlServer(connectionString)
 );
-//Add service to Container
-builder.Services.AddScoped<IuserDetail, UserServices>();  //registering dependency
-builder.Services.AddScoped<IEncrypt, EncryptServices>();
+
+builder.Services.AddScoped<IUserServices, UserServices>();  //registering dependency
+builder.Services.AddScoped<IEncryptServices, EncryptServices>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -12,27 +12,30 @@ using System.Threading.Tasks;
 namespace Service.Services
 {
     //..............Dependencies Injection................//
-    public class UserServices : EncryptServices, IuserDetail
+    public class UserServices : EncryptServices, IUserServices
     {
         private readonly DbTextingGameContext _dbContext;
-        private readonly IEncrypt _encrypt;
-        public UserServices(DbTextingGameContext dbContext, IEncrypt encrypt)
+        private readonly IEncryptServices _encrypt;
+        public UserServices(DbTextingGameContext dbContext, IEncryptServices encrypt)
         {
             _dbContext = dbContext;
             _encrypt = encrypt;
         }
+
         //...........fetch User detail.........//
-        public List<TblUserDetail> GetUser()
+        public List<TblUserDetail> GetUsers()
         {
             var users = _dbContext.TblUserDetails.ToList();
             return users;
         }
+
         //............Check User Email...........// 
         public bool CheckUserExist(string email)
         {
             var user = _dbContext.TblUserDetails.Where(x => x.EmailId == email).FirstOrDefault();
             return user != null;
         }
+
         //............Check Password .................//
         public void Register(Register register)
         {
@@ -44,40 +47,39 @@ namespace Service.Services
             _dbContext.TblUserDetails.Add(register);
             _dbContext.SaveChanges();
         }
+
         //...........User Login.....................//
         public bool UserLogIn(UserLogin login)
         {
             string encryptPassword = _encrypt.EncodePasswordToBase64(login.Password!);
             var user1 = _dbContext.TblUserDetails.Where(x => x.EmailId == login.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
            if (user1 != null)
-            {
+           {
                 return true;
-            }              
+           }              
             return false;
         }
+
         //...........Forget Password.....................//
-        public CrudStatus ForgetPassword(ChangePassword changePwd)
-        {
-            
-            string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.NewPassword!);
-            string encryptConfirmPassword = _encrypt.EncodePasswordToBase64(changePwd.ConfirmPassword!);
-            var user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
-            if (user != null)
+        public CrudStatus ForgetPassword(Register changePwd)
+        {           
+          var user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
+            if (changePwd.EmailId != null)
             {
-                if (encryptPassword == encryptConfirmPassword)
-                {
-                    user!.Password = encryptPassword;
+                if (changePwd.Password == changePwd.ConfirmPassword)
+                {                
                     user.UpdatedDate = DateTime.Now;
                     _dbContext.Entry(user).State = EntityState.Modified;
                     _dbContext.SaveChanges();
-                    
-                    return new CrudStatus() { Status = true, Message = "Password updated successfully" }; 
-                }
-                return new CrudStatus() { Status = true, Message = "you Entered Wring Password" };
+
+                    return new CrudStatus() { Status = true, Message = "Password updated successfully" };
+                }                  
+               
+                return new CrudStatus() { Status = false, Message = "New password not matched with Confirm Password" };
             }
             else
             {
-                return new CrudStatus() { Status = true, Message = "Email was not registered" };
+                return new CrudStatus() { Status = false, Message = "Email was not registered" };
             }
         }
     }
