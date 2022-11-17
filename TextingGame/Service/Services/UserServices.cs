@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 namespace Service.Services
 {
     //..............Dependencies Injection................//
-    public class UserDetail : Encrypt, IuserDetail
+    public class UserServices : EncryptServices, IuserDetail
     {
         private readonly DbTextingGameContext _dbContext;
         private readonly IEncrypt _encrypt;
-        public UserDetail(DbTextingGameContext dbContext, IEncrypt encrypt)
+        public UserServices(DbTextingGameContext dbContext, IEncrypt encrypt)
         {
             _dbContext = dbContext;
             _encrypt = encrypt;
@@ -36,7 +36,7 @@ namespace Service.Services
         //............Check Password .................//
         public void Register(Register register)
         {
-            Encrypt encrypt1 = new Encrypt();
+            EncryptServices encrypt1 = new EncryptServices();
             string encryptPassword = encrypt1.EncodePasswordToBase64(register.Password!);
             register.Password = encryptPassword;
             register.CreatedDate = DateTime.Now;
@@ -54,6 +54,31 @@ namespace Service.Services
                 return true;
             }              
             return false;
+        }
+        //...........Forget Password.....................//
+        public CrudStatus ForgetPassword(ChangePassword changePwd)
+        {
+            
+            string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.NewPassword!);
+            string encryptConfirmPassword = _encrypt.EncodePasswordToBase64(changePwd.ConfirmPassword!);
+            var user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
+            if (user != null)
+            {
+                if (encryptPassword == encryptConfirmPassword)
+                {
+                    user!.Password = encryptPassword;
+                    user.UpdatedDate = DateTime.Now;
+                    _dbContext.Entry(user).State = EntityState.Modified;
+                    _dbContext.SaveChanges();
+                    
+                    return new CrudStatus() { Status = true, Message = "Password updated successfully" }; 
+                }
+                return new CrudStatus() { Status = true, Message = "you Entered Wring Password" };
+            }
+            else
+            {
+                return new CrudStatus() { Status = true, Message = "Email was not registered" };
+            }
         }
     }
 }

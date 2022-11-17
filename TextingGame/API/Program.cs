@@ -18,8 +18,8 @@ builder.Services.AddDbContext<DbTextingGameContext>(option =>
 option.UseSqlServer(connectionString)
 );
 //Add service to Container
-builder.Services.AddScoped<IuserDetail, UserDetail>();  //registering dependency
-builder.Services.AddScoped<IEncrypt, Encrypt>();
+builder.Services.AddScoped<IuserDetail, UserServices>();  //registering dependency
+builder.Services.AddScoped<IEncrypt, EncryptServices>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
