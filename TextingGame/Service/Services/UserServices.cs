@@ -11,8 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Services
-{
-    //..............Dependencies Injection................//
+{    
     public class UserServices : EncryptServices, IUserServices
     {
         private readonly DbTextingGameContext _dbContext;
@@ -62,14 +61,14 @@ namespace Service.Services
         }
 
         //...........Forget Password.....................//
-        public CrudStatus ForgetPassword(Register changePwd)
+        public CrudStatus ForgetPassword(UserLogin changePwd)
         {
-           string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.Password!);
+            string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.Password!);
             TblUserDetail user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
             if (user != null)
             {
                 if (changePwd.Password == changePwd.ConfirmPassword)
-                {                   
+                {
                     user!.Password = encryptPassword;
                     user.UpdatedDate = DateTime.Now;
                     _dbContext.Entry(user).State = EntityState.Modified;

@@ -75,11 +75,10 @@ namespace API.Controllers
         }
 
         [HttpPut("ForgetPassword")]        
-        public JsonResult ForgetPassword(string Mail, Register changePwd)
+        public JsonResult ForgetPassword( UserLogin changePwd)
         {
             try
-            {
-                changePwd.EmailId = Mail;
+            {              
                 return new JsonResult(userService.ForgetPassword(changePwd));
             }
             catch (Exception ex)
