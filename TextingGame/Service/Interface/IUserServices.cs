@@ -1,9 +1,4 @@
 ﻿using Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Interface
 {
@@ -13,6 +8,6 @@ namespace Service.Interface
         bool CheckUserExist(string email);
         void Register(Register register);
         bool UserLogIn(UserLogin login);
-        CrudStatus ForgetPassword(UserLogin changePwd);
+        void ForgetPassword(UserLogin changePwd);
     }
 }

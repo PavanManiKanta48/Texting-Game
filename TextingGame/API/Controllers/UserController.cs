@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Service.Interface;
-using Service.Services;
 
 namespace API.Controllers
 {
@@ -17,8 +16,8 @@ namespace API.Controllers
             _dbContext = dbContext;
             userService = iuserDetail;
         }
-       
-        [HttpGet]        
+
+        [HttpGet]
         public JsonResult GetUsers()
         {
             try
@@ -31,7 +30,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost("UserRegister")]        
+        [HttpPost("UserRegister")]
         public JsonResult UserRegister(Register register)
         {
             try
@@ -74,12 +73,27 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("ForgetPassword")]        
-        public JsonResult ForgetPassword( UserLogin changePwd)
+        [HttpPut("ForgetPassword")]
+        public JsonResult ForgetPassword(UserLogin changePwd)
         {
             try
-            {              
-                return new JsonResult(userService.ForgetPassword(changePwd));
+            {
+                CrudStatus crudStatus = new CrudStatus();
+                crudStatus.Status = false;
+                //check user exist or not
+                bool isUserExist = userService.CheckUserExist(changePwd.EmailId!);
+                if (!isUserExist)
+                    crudStatus.Message = "Email doesn't registered. Please Sign up";
+                else if (changePwd.Password != changePwd.ConfirmPassword)
+                    crudStatus.Message = "Password and Confirm password not match";
+                else
+                {
+                    userService.ForgetPassword(changePwd);
+                    crudStatus.Status = true;
+                    crudStatus.Message = "Password updated successfully";
+                }
+
+                return new JsonResult(crudStatus);
             }
             catch (Exception ex)
             {
