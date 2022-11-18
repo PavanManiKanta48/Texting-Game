@@ -1,11 +1,8 @@
-﻿using Azure.Messaging;
-using Domain;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
 using Persistence;
 using Service.Interface;
+using Service.Services;
 
 namespace API.Controllers
 {
@@ -82,8 +79,8 @@ namespace API.Controllers
         {
             try
             {
-               changePwd.EmailId=Mail;
-                return new JsonResult(userService.ForgetPassword(changePwd));             
+                changePwd.EmailId = Mail;
+                return new JsonResult(userService.ForgetPassword(changePwd));
             }
             catch (Exception ex)
             {

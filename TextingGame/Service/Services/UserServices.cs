@@ -6,6 +6,7 @@ using Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,25 +63,25 @@ namespace Service.Services
 
         //...........Forget Password.....................//
         public CrudStatus ForgetPassword(Register changePwd)
-        {           
-          var user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
-            if (changePwd.EmailId != null)
+        {
+           string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.Password!);
+            TblUserDetail user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
+            if (user != null)
             {
                 if (changePwd.Password == changePwd.ConfirmPassword)
-                {                
+                {                   
+                    user!.Password = encryptPassword;
                     user.UpdatedDate = DateTime.Now;
                     _dbContext.Entry(user).State = EntityState.Modified;
                     _dbContext.SaveChanges();
-
                     return new CrudStatus() { Status = true, Message = "Password updated successfully" };
-                }                  
-               
-                return new CrudStatus() { Status = false, Message = "New password not matched with Confirm Password" };
+                }
+                return new CrudStatus() { Status = false, Message = "Password and Confirm password not matched" };
             }
             else
             {
-                return new CrudStatus() { Status = false, Message = "Email was not registered" };
-            }
+                return new CrudStatus() { Status = false, Message = "Email doesn't registered. Please Sign up" };
+            }            
         }
     }
 }
