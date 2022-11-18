@@ -1,17 +1,10 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
 using Persistence;
 using Service.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    //..............Dependencies Injection................//
     public class UserServices : EncryptServices, IUserServices
     {
         private readonly DbTextingGameContext _dbContext;
@@ -25,8 +18,20 @@ namespace Service.Services
         //...........fetch User detail.........//
         public List<TblUserDetail> GetUsers()
         {
-            var users = _dbContext.TblUserDetails.ToList();
-            return users;
+            List<TblUserDetail> result = (from user in _dbContext.TblUserDetails
+                                          select new TblUserDetail
+                                          {
+                                              UserId = user.UserId,
+                                              UserName = user.UserName,
+                                              EmailId = user.EmailId,
+                                              IsActive = user.IsActive,
+                                              CreatedDate = user.CreatedDate,
+                                              UpdatedDate = user.UpdatedDate
+                                          }).ToList();
+            return result.ToList();
+
+            //var users = _dbContext.TblUserDetails.ToList();
+            //return users;
         }
 
         //............Check User Email...........// 
@@ -53,34 +58,21 @@ namespace Service.Services
         {
             string encryptPassword = _encrypt.EncodePasswordToBase64(login.Password!);
             var user1 = _dbContext.TblUserDetails.Where(x => x.EmailId == login.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
-           if (user1 != null)
-           {
+            if (user1 != null)
+            {
                 return true;
-           }              
+            }
             return false;
         }
 
         //...........Forget Password.....................//
-        public CrudStatus ForgetPassword(Register changePwd)
-        {           
-          var user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
-            if (changePwd.EmailId != null)
-            {
-                if (changePwd.Password == changePwd.ConfirmPassword)
-                {                
-                    user.UpdatedDate = DateTime.Now;
-                    _dbContext.Entry(user).State = EntityState.Modified;
-                    _dbContext.SaveChanges();
-
-                    return new CrudStatus() { Status = true, Message = "Password updated successfully" };
-                }                  
-               
-                return new CrudStatus() { Status = false, Message = "New password not matched with Confirm Password" };
-            }
-            else
-            {
-                return new CrudStatus() { Status = false, Message = "Email was not registered" };
-            }
+        public void ForgetPassword(UserLogin changePwd)
+        {
+            TblUserDetail user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
+            string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.Password!);
+            user.Password = encryptPassword;
+            _dbContext.Entry(user).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
     }
 }
