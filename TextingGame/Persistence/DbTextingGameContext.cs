@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
@@ -14,6 +15,8 @@ public partial class DbTextingGameContext : DbContext
     {
     }
 
+    public virtual DbSet<TblRoom> TblRooms { get; set; }
+
     public virtual DbSet<TblUserDetail> TblUserDetails { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -22,6 +25,27 @@ public partial class DbTextingGameContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TblRoom>(entity =>
+        {
+            entity.HasKey(e => e.RoomId).HasName("PK__tbl_Room__3286393906B00AAF");
+
+            entity.ToTable("tbl_Rooms");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.IsActive)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.RoomName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.RoomTime).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.User).WithMany(p => p.TblRooms)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__tbl_Rooms__UserI__2C3393D0");
+        });
+
         modelBuilder.Entity<TblUserDetail>(entity =>
         {
             entity.HasKey(e => e.UserId).HasName("PK__tbl_User__1788CC4C676CC82F");

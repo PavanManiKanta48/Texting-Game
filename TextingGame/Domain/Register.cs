@@ -1,4 +1,6 @@
-﻿namespace Domain
+﻿using Persistence;
+
+namespace Domain
 {
     public class Register : TblUserDetail
     {

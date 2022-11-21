@@ -1,4 +1,7 @@
-﻿namespace Domain;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Persistence;
 
 public partial class TblUserDetail
 {
@@ -15,4 +18,6 @@ public partial class TblUserDetail
     public DateTime? CreatedDate { get; set; }
 
     public DateTime? UpdatedDate { get; set; }
+
+    public virtual ICollection<TblRoom> TblRooms { get; } = new List<TblRoom>();
 }
