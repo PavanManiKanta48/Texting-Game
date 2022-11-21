@@ -9,24 +9,25 @@ namespace API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly DbTextingGameContext _dbContext;
+        //private readonly DbTextingGameContext _dbContext;
         private readonly IUserServices userService;
-        public UserController(DbTextingGameContext dbContext, IUserServices iuserDetail)
+        public UserController(IUserServices iuserDetail)
         {
-            _dbContext = dbContext;
+            //_dbContext = dbContext;
             userService = iuserDetail;
         }
 
         [HttpGet]
-        public JsonResult GetUsers()
+        public List<TblUserDetail> GetUsers()
         {
             try
             {
-                return new JsonResult(userService.GetUsers().ToList());
+                var users = userService.GetUsers().ToList();
+                return users;
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                return new List<TblUserDetail>();
             }
         }
 

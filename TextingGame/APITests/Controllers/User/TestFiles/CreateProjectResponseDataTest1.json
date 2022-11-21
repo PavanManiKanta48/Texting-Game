@@ -1,0 +1,128 @@
+[
+  {
+    "UserId": 8,
+    "UserName": "Pavan",
+    "EmailId": "pavanmani@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-16T22:31:25.253",
+    "UpdatedDate": "2022-11-18T11:13:55.737"
+  },
+  {
+    "UserId": 9,
+    "UserName": "anshika",
+    "EmailId": "anshika@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-17T12:46:07.703",
+    "UpdatedDate": "2022-11-17T22:54:43.837"
+  },
+  {
+    "UserId": 10,
+    "UserName": "string",
+    "EmailId": "anshika@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-17T15:23:15.34",
+    "UpdatedDate": null
+  },
+  {
+    "UserId": 11,
+    "UserName": "string",
+    "EmailId": "anshika@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-17T15:23:29.89",
+    "UpdatedDate": null
+  },
+  {
+    "UserId": 12,
+    "UserName": "string",
+    "EmailId": "anshika@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-17T15:23:40.973",
+    "UpdatedDate": null
+  },
+  {
+    "UserId": 13,
+    "UserName": "Prem",
+    "EmailId": "pream@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-17T16:36:56.39",
+    "UpdatedDate": "2022-11-17T23:16:30.81"
+  },
+  {
+    "UserId": 14,
+    "UserName": "Aman",
+    "EmailId": "aman@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-17T22:16:05.257",
+    "UpdatedDate": null
+  },
+  {
+    "UserId": 15,
+    "UserName": "Ankit",
+    "EmailId": "ankit@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-17T22:19:08.127",
+    "UpdatedDate": "2022-11-18T08:57:43.477"
+  },
+  {
+    "UserId": 16,
+    "UserName": "teju",
+    "EmailId": "teju@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-18T08:34:50.873",
+    "UpdatedDate": "2022-11-18T11:04:03.277"
+  },
+  {
+    "UserId": 17,
+    "UserName": "string",
+    "EmailId": null,
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-18T07:18:30.497",
+    "UpdatedDate": null
+  },
+  {
+    "UserId": 18,
+    "UserName": "string",
+    "EmailId": null,
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-18T07:20:42.783",
+    "UpdatedDate": null
+  },
+  {
+    "UserId": 19,
+    "UserName": "string",
+    "EmailId": "pavanmani@gmail.com",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-18T07:49:27.167",
+    "UpdatedDate": "2022-11-18T13:20:05.863"
+  },
+  {
+    "UserId": 20,
+    "UserName": "string",
+    "EmailId": null,
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-18T09:57:09.803",
+    "UpdatedDate": "2022-11-18T09:57:09.803"
+  },
+  {
+    "UserId": 21,
+    "UserName": "string",
+    "EmailId": "string",
+    "Password": null,
+    "IsActive": true,
+    "CreatedDate": "2022-11-21T06:47:20.633",
+    "UpdatedDate": "2022-11-21T06:47:20.633"
+  }
+]
