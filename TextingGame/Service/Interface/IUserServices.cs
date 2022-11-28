@@ -10,5 +10,6 @@ namespace Service.Interface
         bool Register(Register register);
         bool UserLogIn(UserLogin login);
         bool ForgetPassword(UserLogin changePwd);
+
     }
 }
