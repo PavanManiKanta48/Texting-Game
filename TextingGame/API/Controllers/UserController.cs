@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Service.Interface;
+using Service.Services;
 
 namespace API.Controllers
 {
@@ -60,14 +61,25 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
-
         [HttpPost]
         [Route("LogIn")]
-        public JsonResult LogIn(UserLogin logIn)
+        public JsonResult UserLogIn(UserLogin logIn)
         {
+            CrudStatus crudStatus = new CrudStatus();
             try
             {
-                return new JsonResult(userService.UserLogIn(logIn));
+                bool result = userService.UserLogIn(logIn);
+                if (result == true)
+                {
+                    crudStatus.Status = true;
+                    crudStatus.Message = "Login successfully";
+                }
+                else
+                {
+                    crudStatus.Status = false;
+                    crudStatus.Message = "Email and Password doesnt match";
+                }
+                return new JsonResult(crudStatus);
             }
             catch (Exception ex)
             {

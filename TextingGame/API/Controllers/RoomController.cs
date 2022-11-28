@@ -36,14 +36,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public JsonResult CreateRoom(TblRoom croom)
+        public JsonResult CreateRoom(TblRoom room)
         {
             try
             {
 
                 CrudStatus crudStatus = new CrudStatus();
                 crudStatus.Status = false;
-                bool IsExistUserId = _roomServices.CheckExistUserId(croom);
+                bool IsExistUserId = _roomServices.CheckExistUserId(room);
                 if (!IsExistUserId)
                 {
                     
@@ -52,7 +52,7 @@ namespace API.Controllers
                 else
                 {
 
-                    _roomServices.CreateRoom(croom);
+                    _roomServices.CreateRoom(room);
                     crudStatus.Status = true;
                     crudStatus.Message = "User Create room succesfully";
                 }
@@ -71,8 +71,8 @@ namespace API.Controllers
             {
                 CrudStatus crudStatus = new CrudStatus();
                 crudStatus.Status = false;
-                bool IsExistRoomId1 = _roomServices.CheckExistRoomId(uroom);
-                if (!IsExistRoomId1)
+                bool IsExistRoomId = _roomServices.CheckExistRoomId(uroom);
+                if (!IsExistRoomId)
                 {
                     crudStatus.Message = "Id not matched";
                 }
@@ -91,16 +91,16 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public JsonResult DeleteRoom(TblRoom droom)
+        public JsonResult DeleteRoom(TblRoom room)
         {
             try
             {
                 CrudStatus crudStatus = new CrudStatus();
                 crudStatus.Status = false;
-                bool isExistRoomId = _roomServices.CheckExistRoomId(droom);
+                bool isExistRoomId = _roomServices.CheckExistRoomId(room);
                 if (isExistRoomId)
                 {
-                    _roomServices.DeleteRoom(droom);
+                    _roomServices.DeleteRoom(room);
                     crudStatus.Status = true;
                     crudStatus.Message = "room is succesfully deleted";
                 }
