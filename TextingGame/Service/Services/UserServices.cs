@@ -1,18 +1,26 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using Service.Interface;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Service.Services
 {
     public class UserServices : EncryptServices, IUserServices
-    {
+    { 
         private readonly DbTextingGameContext _dbContext;
         private readonly IEncryptServices _encrypt;
-        public UserServices(DbTextingGameContext dbContext, IEncryptServices encrypt)
+        private readonly IConfiguration _configuration;
+        public UserServices(DbTextingGameContext dbContext, IEncryptServices encrypt, IConfiguration configuration)
         {
             _dbContext = dbContext;
             _encrypt = encrypt;
+            _configuration= configuration;
+
         }
 
         //...........fetch User detail.........//
@@ -54,15 +62,35 @@ namespace Service.Services
         }
 
         //...........User Login.....................//
-        public bool UserLogIn(UserLogin login)
+        public string UserLogIn(UserLogin login)
         {
             string encryptPassword = _encrypt.EncodePasswordToBase64(login.Password!);
             var user1 = _dbContext.TblUserDetails.Where(x => x.EmailId == login.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
             if (user1 != null)
             {
-                return true;
+                var token = GenerateToken(login);
+                return token;
             }
-            return false;
+            return null;
+        }
+        private string GenerateToken(UserLogin user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier,user.EmailId!),
+                 new Claim(ClaimTypes.NameIdentifier,user.Password!),
+            };
+            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(15),
+                signingCredentials: credentials);
+
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+
         }
 
         //...........Forget Password.....................//

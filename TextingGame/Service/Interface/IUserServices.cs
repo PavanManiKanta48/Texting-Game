@@ -8,7 +8,7 @@ namespace Service.Interface
         List<TblUserDetail> GetUsers();
         bool CheckUserExist(string email);
         void Register(Register register);
-        bool UserLogIn(UserLogin login);
+        string UserLogIn(UserLogin login);
         void ForgetPassword(UserLogin changePwd);
     }
 }
