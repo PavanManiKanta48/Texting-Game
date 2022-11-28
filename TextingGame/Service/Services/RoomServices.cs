@@ -27,7 +27,7 @@ namespace Service.Services
         public bool CheckExistUserId(TblRoom room)
         
         {
-            var room1 = _dbContext.TblRooms.Where(x => x.UserId == room.UserId).FirstOrDefault()!;
+            var room1 = _dbContext.TblUserDetails.Where(x => x.UserId == room.UserId).FirstOrDefault()!;
             if (room1 != null)
                 return true;
             else
@@ -38,8 +38,8 @@ namespace Service.Services
         public void CreateRoom(TblRoom croom)
 
         {
-            croom.CreatedDate = DateTime.Now;
-            croom.UpdatedDate = null;
+            croom.CheckIn = DateTime.Now;
+            croom.Updated = null;
             _dbContext.TblRooms.Add(croom);
             _dbContext.SaveChanges();
         }
@@ -57,7 +57,7 @@ namespace Service.Services
             TblRoom room = _dbContext.TblRooms.Where(x => x.RoomId == uroom.RoomId).FirstOrDefault()!;
             room.RoomName = uroom.RoomName;
             room.NumOfPeopele=uroom.NumOfPeopele;
-            room.UpdatedDate = DateTime.Now;
+            room.Updated = DateTime.Now;
              _dbContext.Entry(room).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }

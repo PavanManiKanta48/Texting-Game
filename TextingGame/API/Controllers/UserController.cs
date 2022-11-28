@@ -68,8 +68,8 @@ namespace API.Controllers
             CrudStatus crudStatus = new CrudStatus();
             try
             {
-                bool result = userService.UserLogIn(logIn);
-                if (result == true)
+               var result = userService.UserLogIn(logIn);
+                if (result !=null)
                 {
                     crudStatus.Status = true;
                     crudStatus.Message = "Login successfully";

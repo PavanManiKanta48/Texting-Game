@@ -45,13 +45,11 @@ namespace API.Controllers
                 crudStatus.Status = false;
                 bool IsExistUserId = _roomServices.CheckExistUserId(room);
                 if (!IsExistUserId)
-                {
-                    
+                {                    
                     crudStatus.Message = "User unable to Create room because id is not matched";
                 }
                 else
                 {
-
                     _roomServices.CreateRoom(room);
                     crudStatus.Status = true;
                     crudStatus.Message = "User Create room succesfully";
