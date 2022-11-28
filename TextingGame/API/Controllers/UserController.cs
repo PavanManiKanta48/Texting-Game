@@ -1,10 +1,12 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Service.Interface;
 
 namespace API.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -17,7 +19,7 @@ namespace API.Controllers
             userService = iuserDetail;
         }
 
-        [HttpGet]
+        [HttpGet,Authorize]
         public JsonResult GetUsers()
         {
             try
