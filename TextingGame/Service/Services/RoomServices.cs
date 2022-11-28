@@ -28,7 +28,10 @@ namespace Service.Services
         
         {
             var room1 = _dbContext.TblRooms.Where(x => x.UserId == room.UserId).FirstOrDefault()!;
-            return room1 != null;
+            if (room1 != null)
+                return true;
+            else
+                return false;
         }
 
         //...........Create Room..........//

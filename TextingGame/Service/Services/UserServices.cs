@@ -42,7 +42,7 @@ namespace Service.Services
         }
 
         //............Check Password .................//
-        public void Register(Register register)
+        public bool Register(Register register)
         {
             EncryptServices encrypt1 = new EncryptServices();
             string encryptPassword = encrypt1.EncodePasswordToBase64(register.Password!);
@@ -51,6 +51,7 @@ namespace Service.Services
             register.UpdatedDate = null;
             _dbContext.TblUserDetails.Add(register);
             _dbContext.SaveChanges();
+            return true;
         }
 
         //...........User Login.....................//
@@ -66,13 +67,14 @@ namespace Service.Services
         }
 
         //...........Forget Password.....................//
-        public void ForgetPassword(UserLogin changePwd)
+        public bool ForgetPassword(UserLogin changePwd)
         {
             TblUserDetail user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
             string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.Password!);
             user.Password = encryptPassword;
             _dbContext.Entry(user).State = EntityState.Modified;
             _dbContext.SaveChanges();
+            return true;
         }
     }
 }
