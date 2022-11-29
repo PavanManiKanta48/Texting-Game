@@ -35,13 +35,14 @@ namespace Service.Services
         }
 
         //...........Create Room..........//
-        public void CreateRoom(TblRoom croom)
+        public int CreateRoom(TblRoom croom)
 
         {
             croom.CheckIn = DateTime.Now;
             croom.Updated = null;
             _dbContext.TblRooms.Add(croom);
             _dbContext.SaveChanges();
+            return croom.RoomId;
         }
 
        // .........Check Room Id Exist............//
@@ -55,19 +56,25 @@ namespace Service.Services
         public void UpdateRoom(TblRoom uroom)
         {
             TblRoom room = _dbContext.TblRooms.Where(x => x.RoomId == uroom.RoomId).FirstOrDefault()!;
-            room.RoomName = uroom.RoomName;
-            room.NumOfPeopele=uroom.NumOfPeopele;
-            room.Updated = DateTime.Now;
-             _dbContext.Entry(room).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+                room.RoomName = uroom.RoomName;
+                room.NumOfPeopele = uroom.NumOfPeopele;
+                room.Updated = DateTime.Now;
+                _dbContext.Entry(room).State = EntityState.Modified;
+                _dbContext.SaveChanges();
         }
 
         //...........Delete Room................//
         public void DeleteRoom(TblRoom droom)
         {
-            TblRoom user = _dbContext.TblRooms.Where(x => x.RoomId == droom.RoomId).FirstOrDefault()!;
-            _dbContext.TblRooms.Remove(user);
+            TblRoom room = _dbContext.TblRooms.Where(x => x.RoomId == droom.RoomId).FirstOrDefault()!;
+            _dbContext.TblRooms.Remove(room);
             _dbContext.SaveChanges();
+        }
+
+        public string GenerateRoomCode(int Id)
+        {
+            TblRoom room = _dbContext.TblRooms.Where(x => x.RoomId == Id).FirstOrDefault()!;
+            return "RM-" + room.RoomName + "-" + room.RoomId;
         }
     }
 }
