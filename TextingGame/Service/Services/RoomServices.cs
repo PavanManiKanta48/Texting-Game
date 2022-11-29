@@ -66,8 +66,8 @@ namespace Service.Services
         //...........Delete Room................//
         public void DeleteRoom(TblRoom droom)
         {
-            TblRoom user = _dbContext.TblRooms.Where(x => x.RoomId == droom.RoomId).FirstOrDefault()!;
-            _dbContext.TblRooms.Remove(user);
+            TblRoom room = _dbContext.TblRooms.Where(x => x.RoomId == droom.RoomId).FirstOrDefault()!;
+            _dbContext.TblRooms.Remove(room);
             _dbContext.SaveChanges();
         }
 

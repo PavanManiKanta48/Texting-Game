@@ -102,8 +102,8 @@ namespace XUnitTesting
             //Arrange
             var updateRoom = new TblRoom()
             {
-                RoomId = 1,
-                UserId = 29,
+                RoomId = 8,
+                UserId = 22,
                 RoomName = "textGame",
                 NumOfPeopele = 12,
                 CheckIn = DateTime.Now,
