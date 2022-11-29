@@ -50,9 +50,11 @@ namespace API.Controllers
                 }
                 else
                 {
-                    _roomServices.CreateRoom(room);
+                   
+                   int roomid =  _roomServices.CreateRoom(room);
                     crudStatus.Status = true;
                     crudStatus.Message = "User Create room succesfully";
+                    crudStatus.Data = roomid.ToString();
                 }
                 return new JsonResult(crudStatus);
             }

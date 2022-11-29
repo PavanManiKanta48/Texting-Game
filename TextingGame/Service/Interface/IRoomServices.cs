@@ -11,9 +11,11 @@ namespace Service.Interface
     {
         List<TblRoom> GetRoom();
         bool CheckExistUserId(TblRoom room);
-        void CreateRoom(TblRoom croom);
+        int CreateRoom(TblRoom croom);
         bool CheckExistRoomId(TblRoom room);
         void UpdateRoom(TblRoom uroom);
         void DeleteRoom(TblRoom droom);
+        string GenerateRoomCode(int Id);
+
     }
 }
