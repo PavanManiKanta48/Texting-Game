@@ -1,15 +1,20 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32;
 using Moq;
 using Persistence;
 using Service.Interface;
 using Service.Services;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace XUnitTesting
 {
@@ -19,13 +24,17 @@ namespace XUnitTesting
         private readonly DatabaseFixure _fixure;
         private readonly UserServices _services;
         Mock<IEncryptServices> _encrypt;
-        Mock<IConfiguration> config;
+         private readonly IConfiguration _configuration;
         public UserServicesTest(DatabaseFixure fixure)
         {
             _fixure = fixure;
             _encrypt = new Mock<IEncryptServices>();
-            config = new Mock<IConfiguration>();
-            _services = new UserServices(_fixure.context, _encrypt.Object,config.Object);
+            _configuration = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory())
+               .AddJsonFile(@"appsettings.json",false,false)
+               .AddEnvironmentVariables()
+                .Build();
+            _services = new UserServices(_fixure.context, _encrypt.Object,_configuration);
         }
 
         //.........Get all User..........//
@@ -135,16 +144,18 @@ namespace XUnitTesting
         [Fact]
         public void LogIn_with_correct_mail_password()
         {
+            //Arrange
             var login = new UserLogin()
             {
                 EmailId = "anshika@gmail.com",
                 Password = "anshi12",
                 ConfirmPassword = "anshi12"
             };
-            _encrypt.Setup(method => method.EncodePasswordToBase64(login.Password)).Returns(login.Password);
-            var result = _services.UserLogIn(login);
-            var expected = "login succesful";
-            Assert.Equal(result,expected);
+       _encrypt.Setup(method => method.EncodePasswordToBase64(login.Password)).Returns(login.Password);
+            //Act
+            string result = _services.UserLogIn(login);
+            //Assert
+            Assert.NotNull(result);
         }
 
         //.................check login with correct mail and wrong password..........//
@@ -161,10 +172,10 @@ namespace XUnitTesting
             _encrypt.Setup(method => method.EncodePasswordToBase64(user.Password)).Returns(user.Password);
 
             //Act
-            var result = _services.UserLogIn(user);
+            string result = _services.UserLogIn(user);
 
             //Assert
-            Assert.NotNull(result);
+            Assert.Null(result);
         }
 
         //.............check login with new mail...............//
@@ -181,10 +192,10 @@ namespace XUnitTesting
             _encrypt.Setup(method => method.EncodePasswordToBase64(user.Password)).Returns(user.Password);
 
             //Act
-            var result = _services.UserLogIn(user);
+            string result = _services.UserLogIn(user);
 
             //Assert
-            Assert.NotNull(result);
+            Assert.Null(result);
         }
 
         //..................check forgot password..............//
