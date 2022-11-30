@@ -114,7 +114,7 @@ namespace XUnitTesting
             var result = _services.CheckExistRoomId(updateRoom);
             var expected = "Update Id is not matched";
             //Assert
-            Assert.True(result,expected);
+            Assert.False(result,expected);
         }
 
         [Fact]
