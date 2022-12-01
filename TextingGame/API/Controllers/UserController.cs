@@ -8,6 +8,7 @@ using Service.Services;
 namespace API.Controllers
 {
    
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -72,7 +73,7 @@ namespace API.Controllers
                 if (result !=null)
                 {
                     crudStatus.Status = true;
-                    crudStatus.Message = "Login successfully";
+                    crudStatus.Message = result;
                 }
                 else
                 {

@@ -19,5 +19,7 @@ public partial class TblRoom
 
     public bool? IsActive { get; set; }
 
+    public virtual ICollection<TblUserRoom> TblUserRooms { get; } = new List<TblUserRoom>();
+
     public virtual TblUserDetail? User { get; set; }
 }

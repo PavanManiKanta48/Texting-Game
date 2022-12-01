@@ -20,4 +20,6 @@ public partial class TblUserDetail
     public DateTime? UpdatedDate { get; set; }
 
     public virtual ICollection<TblRoom> TblRooms { get; } = new List<TblRoom>();
+
+    public virtual ICollection<TblUserRoom> TblUserRooms { get; } = new List<TblUserRoom>();
 }

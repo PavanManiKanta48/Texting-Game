@@ -19,9 +19,11 @@ public partial class DbTextingGameContext : DbContext
 
     public virtual DbSet<TblUserDetail> TblUserDetails { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server = 65.0.181.176;Database=db_TextingGame;User Id = admin;Password = Asdf1234*;TrustServerCertificate=True;Connection Timeout=300;command timeout=300");
+    public virtual DbSet<TblUserRoom> TblUserRooms { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server = 65.0.181.176;Database=db_TextingGame;User Id = admin;Password = Asdf1234*;TrustServerCertificate=True;Connection Timeout=300;command timeout=300");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,6 +61,30 @@ public partial class DbTextingGameContext : DbContext
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<TblUserRoom>(entity =>
+        {
+            entity.HasKey(e => e.PersonId).HasName("PK__tbl_User__7EABD08B00A4FECA");
+
+            entity.ToTable("tbl_User_Rooms");
+
+            entity.Property(e => e.PersonId).HasColumnName("Person_ID");
+            entity.Property(e => e.EnterDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Enter_Date");
+            entity.Property(e => e.ExitDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Exit_Date");
+            entity.Property(e => e.RoomIdFk).HasColumnName("RoomID_fk");
+
+            entity.HasOne(d => d.RoomIdFkNavigation).WithMany(p => p.TblUserRooms)
+                .HasForeignKey(d => d.RoomIdFk)
+                .HasConstraintName("FK__tbl_User___RoomI__45F365D3");
+
+            entity.HasOne(d => d.User).WithMany(p => p.TblUserRooms)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__tbl_User___UserI__46E78A0C");
         });
 
         OnModelCreatingPartial(modelBuilder);
