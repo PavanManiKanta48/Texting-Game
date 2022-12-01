@@ -25,6 +25,7 @@ option.UseSqlServer(connectionString)
 builder.Services.AddScoped<IUserServices, UserServices>();  //registering dependency
 builder.Services.AddScoped<IEncryptServices, EncryptServices>();
 builder.Services.AddScoped<IRoomServices, RoomServices>();
+builder.Services.AddScoped<IUserRoomServices, UserRoomServices>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

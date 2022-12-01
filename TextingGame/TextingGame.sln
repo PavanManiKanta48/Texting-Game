@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\
 		{91F6D436-29AB-4765-B192-DFBC2683CE06} = {91F6D436-29AB-4765-B192-DFBC2683CE06}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTesting", "XUnitTesting\XUnitTesting.csproj", "{DFD44622-28B4-4A5D-A614-1B4D47AE0EB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTesting", "XUnitTesting\XUnitTesting.csproj", "{DFD44622-28B4-4A5D-A614-1B4D47AE0EB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
