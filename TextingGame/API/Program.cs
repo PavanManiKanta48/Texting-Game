@@ -26,6 +26,7 @@ builder.Services.AddScoped<IUserServices, UserServices>();  //registering depend
 builder.Services.AddScoped<IEncryptServices, EncryptServices>();
 builder.Services.AddScoped<IRoomServices, RoomServices>();
 builder.Services.AddScoped<IUserRoomServices, UserRoomServices>();
+builder.Services.AddScoped<IMessageServices, MessageServices>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

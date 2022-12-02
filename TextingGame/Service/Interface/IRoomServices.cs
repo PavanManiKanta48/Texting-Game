@@ -11,10 +11,9 @@ namespace Service.Interface
     {
         List<TblRoom> GetRoom();
         bool CheckExistUserId(TblRoom room);
-        int CreateRoom(TblRoom croom);
+        int CreateRoom(TblRoom room);
         bool CheckExistRoomId(TblRoom room);
-        void UpdateRoom(TblRoom uroom);
-        void DeleteRoom(TblRoom droom);
+        void UpdateRoom(TblRoom room);
         string GenerateRoomCode(int Id);
 
     }

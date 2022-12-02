@@ -25,6 +25,7 @@ namespace XUnitTesting
         private readonly UserServices _services;
         Mock<IEncryptServices> _encrypt;
          private readonly IConfiguration _configuration;
+
         public UserServicesTest(DatabaseFixure fixure)
         {
             _fixure = fixure;
@@ -34,7 +35,7 @@ namespace XUnitTesting
                .AddJsonFile(@"appsettings.json",false,false)
                .AddEnvironmentVariables()
                 .Build();
-            _services = new UserServices(_fixure.context, _encrypt.Object,_configuration);
+            _services = new UserServices(_fixure._context, _encrypt.Object,_configuration);
         }
 
         //.........Get all User..........//
@@ -53,11 +54,12 @@ namespace XUnitTesting
         public void Check_Extist_with_CheckExtistUser()
         {
             //Arrange
-            var user1 = new Register()
+            var user = new Register()
             {
                 UserName = "Anshika",
                 EmailId = "anshika@gmail.com",
                 Password = "anshi12",
+                MobileNo = "7867765564",
                 ConfirmPassword = "anshi12",
                 CreatedDate = DateTime.Now,
                 UpdatedDate = null,
@@ -65,7 +67,7 @@ namespace XUnitTesting
             };
 
             //Act
-            var result = _services.Register(user1);
+            var result = _services.Register(user);
 
             //Assert
             Assert.True(result);

@@ -13,11 +13,13 @@ public partial class TblRoom
 
     public int? NumOfPeopele { get; set; }
 
-    public DateTime? CheckIn { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? Updated { get; set; }
+    public DateTime? UpdatedDate { get; set; }
 
     public bool? IsActive { get; set; }
+
+    public virtual ICollection<TblMessage> TblMessages { get; } = new List<TblMessage>();
 
     public virtual ICollection<TblUserRoom> TblUserRooms { get; } = new List<TblUserRoom>();
 

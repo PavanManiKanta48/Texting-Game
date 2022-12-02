@@ -12,18 +12,19 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class RoomController : ControllerBase
     {
-        private readonly DbTextingGameContext _dbcontext;
+        private readonly DbTextingGameContext _dbRoomcontext;
         private readonly IRoomServices _roomServices;
+
         public RoomController(DbTextingGameContext dbContext, IRoomServices roomServices)
         {
-            _dbcontext = dbContext;
+            _dbRoomcontext = dbContext;
             _roomServices = roomServices;
         }
 
         // GET: api/<RoomController>
+        [Authorize]
         [HttpGet]
         public JsonResult GetRoom()
         {
@@ -67,48 +68,23 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public JsonResult UpdateRoom(TblRoom uroom)
+        public 
+            JsonResult UpdateRoom(TblRoom room)
         {
             try
             {
                 CrudStatus crudStatus = new CrudStatus();
                 crudStatus.Status = false;
-                bool IsExistRoomId = _roomServices.CheckExistRoomId(uroom);
+                bool IsExistRoomId = _roomServices.CheckExistRoomId(room);
                 if (!IsExistRoomId)
                 {
-                    crudStatus.Message = "Id not matched";
+                    crudStatus.Message = "Room Id not matched";
                 }
                 else
                 {
-                    _roomServices.UpdateRoom(uroom);
+                    _roomServices.UpdateRoom(room);
                     crudStatus.Status = true;
-                    crudStatus.Message = "user updated succesfully";
-                }
-                return new JsonResult(crudStatus);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(ex.Message);
-            }
-        }
-
-        [HttpDelete]
-        public JsonResult DeleteRoom(TblRoom room)
-        {
-            try
-            {
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
-                bool isExistRoomId = _roomServices.CheckExistRoomId(room);
-                if (isExistRoomId)
-                {
-                    _roomServices.DeleteRoom(room);
-                    crudStatus.Status = true;
-                    crudStatus.Message = "room is succesfully deleted";
-                }
-                else
-                {
-                    crudStatus.Message = "Id is not matched room is not Deleted";
+                    crudStatus.Message = "User update room succesfully";
                 }
                 return new JsonResult(crudStatus);
             }
