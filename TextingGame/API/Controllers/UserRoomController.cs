@@ -13,12 +13,12 @@ namespace API.Controllers
     [ApiController]    
     public class UserRoomController : ControllerBase
     {
-        private readonly DbTextingGameContext _dbContext;
+        private readonly DbTextingGameContext _dbUserRoomContext;
         private readonly IUserRoomServices _userRoomServices;
 
         public UserRoomController(DbTextingGameContext dbContext,IUserRoomServices userRoomServices)
         {
-            _dbContext = dbContext;
+            _dbUserRoomContext = dbContext;
             _userRoomServices = userRoomServices;
         }
         
@@ -34,6 +34,7 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
+
         [HttpPost("AddUserToRoom")]
         public JsonResult AddUserToRoom(TblUserRoom addUser)
         {
@@ -41,16 +42,26 @@ namespace API.Controllers
             {
                 CrudStatus crudStatus = new CrudStatus();
                 crudStatus.Status = false;
-                bool IsExistUserId = _userRoomServices.CheckExistUserId(addUser);
-                if (!IsExistUserId)
+                bool IsExistUserId = _userRoomServices.CheckUserId(addUser);
+                if (IsExistUserId)
                 {
-                    crudStatus.Message = "User unable to Join room because id is not matched";
+                    bool IsExistroomId = _userRoomServices.CheckRoomId(addUser);
+                    if (IsExistroomId)
+                    {
+                        _userRoomServices.AddUserToRoom(addUser);
+                        crudStatus.Status = true;
+                        crudStatus.Message = "User Joined Room succesfull";
+                    }
+                    else
+                    {
+                        crudStatus.Status = false;
+                        crudStatus.Message = "room id is not exist";
+                    }
                 }
                 else
                 {
-                    _userRoomServices.AddUserToRoom(addUser);
-                    crudStatus.Status = true;
-                    crudStatus.Message = "User Joined room succesfully";                    
+                    crudStatus.Status = false;
+                    crudStatus.Message = "User ID is not matched";
                 }
                 return new JsonResult(crudStatus);
             }
@@ -59,17 +70,18 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
+
         [HttpDelete]
-        public JsonResult DeleteUserFromRoom(TblUserRoom deleteUser)
+        public JsonResult DeleteUserFromRoom(TblUserRoom deleteUserRoom)
         {
             try
             {
                 CrudStatus crudStatus = new CrudStatus();
                 crudStatus.Status = false;
-                bool isExistUserId = _userRoomServices.CheckExistUserId(deleteUser);
-                if (isExistUserId)
+                bool isExistUserRoomId = _userRoomServices.CheckUserRoomId(deleteUserRoom);
+                if (isExistUserRoomId)
                 {
-                    _userRoomServices.DeleteUserFromRoom(deleteUser);
+                    _userRoomServices.DeleteUserFromRoom(deleteUserRoom);
                     crudStatus.Status = true;
                     crudStatus.Message = "person is succesfully deleted";
                 }

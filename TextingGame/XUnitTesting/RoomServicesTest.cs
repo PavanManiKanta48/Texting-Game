@@ -13,6 +13,7 @@ namespace XUnitTesting
     public class DatabaseCollection : ICollectionFixture<DatabaseFixure>
     { 
     }
+
     [Collection("DataBase Collection")]
     public class RoomServicesTest
     {
@@ -22,7 +23,7 @@ namespace XUnitTesting
         public RoomServicesTest(DatabaseFixure fixure)
         {
             _fixure = fixure;
-            _services = new RoomServices(_fixure.context);
+            _services = new RoomServices(_fixure._context);
         }
 
         [Fact]
@@ -43,8 +44,8 @@ namespace XUnitTesting
                 UserId = 2,
                 RoomName = "Denish",
                 NumOfPeopele = 2,
-                CheckIn = DateTime.Now,
-                Updated = null,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = null,
                 IsActive = true
             };
             //Act
@@ -64,8 +65,8 @@ namespace XUnitTesting
                 UserId = 2,
                 RoomName = "TextGame",
                 NumOfPeopele = 10,
-                CheckIn = DateTime.Now,
-                Updated = null,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = null,
                 IsActive = true
             };
             //Act
@@ -85,8 +86,8 @@ namespace XUnitTesting
                 UserId = 2,
                 RoomName = "Ludo",
                 NumOfPeopele = 9,
-                CheckIn = DateTime.Now,
-                Updated = null,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = null,
                 IsActive = true
             };
             //Act
@@ -106,43 +107,13 @@ namespace XUnitTesting
                 UserId = 22,
                 RoomName = "textGame",
                 NumOfPeopele = 12,
-                CheckIn = DateTime.Now,
-                Updated = null,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = null,
                 IsActive = true
             };
             //Act
             var result = _services.CheckExistRoomId(updateRoom);
             var expected = "Update Id is not matched";
-            //Assert
-            Assert.False(result,expected);
-        }
-
-        [Fact]
-        public void Check_with_deleteRoom_CorrectId()
-        {
-            //Arrange
-            var deleteRoom = new TblRoom()
-            {
-                RoomId = 1,
-         };
-            //Act
-            var result = _services.CheckExistRoomId(deleteRoom);
-            var expected = "Delete Room Is succesfull";
-            //Assert
-            Assert.True(result,expected);
-        }
-
-        [Fact]
-        public void Check_with_deleteRoom_WrongId()
-        {
-            //Arrange
-            var deleteRoom = new TblRoom()
-            {
-                RoomId = 5,
-            };
-            //Act
-            var result = _services.CheckExistRoomId(deleteRoom);
-            var expected = "Delete id is not matched";
             //Assert
             Assert.False(result,expected);
         }

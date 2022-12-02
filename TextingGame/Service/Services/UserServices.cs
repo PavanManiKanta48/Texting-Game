@@ -12,41 +12,42 @@ namespace Service.Services
 {
     public class UserServices : EncryptServices, IUserServices
     { 
-        private readonly DbTextingGameContext _dbContext;
+        private readonly DbTextingGameContext _dbUserContext;
         private readonly IEncryptServices _encrypt;
         private readonly IConfiguration _configuration;
-        public UserServices(DbTextingGameContext dbContext, IEncryptServices encrypt, IConfiguration configuration)
+
+        public UserServices(DbTextingGameContext dbUserContext, IEncryptServices encrypt, IConfiguration configuration)
         {
-            _dbContext = dbContext;
+            _dbUserContext = dbUserContext;
             _encrypt = encrypt;
             _configuration= configuration;
-
-        }
+      }
 
         //...........fetch User detail.........//
         public List<TblUserDetail> GetUsers()
         {
-            List<TblUserDetail> result = (from user in _dbContext.TblUserDetails
+            List<TblUserDetail> result = (from user in _dbUserContext.TblUserDetails
                                           select new TblUserDetail
                                           {
                                               UserId = user.UserId,
                                               UserName = user.UserName,
                                               EmailId = user.EmailId,
-                                              IsActive = user.IsActive,
+                                              MobileNo = user.MobileNo,
                                               CreatedDate = user.CreatedDate,
-                                              UpdatedDate = user.UpdatedDate
+                                              UpdatedDate = user.UpdatedDate,
+                                               IsActive = user.IsActive
                                           }).ToList();
             return result.ToList();
-
-            //var users = _dbContext.TblUserDetails.ToList();
-            //return users;
         }
 
         //............Check User Email...........// 
         public bool CheckUserExist(string email)
         {
-            var user = _dbContext.TblUserDetails.Where(x => x.EmailId == email).FirstOrDefault();
-            return user != null;
+            var user = _dbUserContext.TblUserDetails.Where(x => x.EmailId == email).FirstOrDefault();
+            if (user != null)
+                return true;
+            else
+                return false;
         }
 
         //............Check Password .................//
@@ -57,8 +58,9 @@ namespace Service.Services
             register.Password = encryptPassword;
             register.CreatedDate = DateTime.Now;
             register.UpdatedDate = null;
-            _dbContext.TblUserDetails.Add(register);
-            _dbContext.SaveChanges();
+            register.IsActive = true;
+            _dbUserContext.TblUserDetails.Add(register);
+            _dbUserContext.SaveChanges();
             return true;
         }
 
@@ -66,14 +68,16 @@ namespace Service.Services
         public string UserLogIn(UserLogin login)
         {
             string encryptPassword = _encrypt.EncodePasswordToBase64(login.Password!);
-            var user1 = _dbContext.TblUserDetails.Where(x => x.EmailId == login.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
-            if (user1 != null)
+            var user = _dbUserContext.TblUserDetails.Where(x => x.EmailId == login.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
+            if (user != null)
             {
                 var token = GenerateToken(login);
                 return token;
             }
             return null;
         }
+
+        //..................Token.............//
         private string GenerateToken(UserLogin user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -88,20 +92,17 @@ namespace Service.Services
                 claims,
                 expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: credentials);
-
-
             return new JwtSecurityTokenHandler().WriteToken(token);
-
-        }
+      }
 
         //...........Forget Password.....................//
         public bool ForgetPassword(UserLogin changePwd)
         {
-            TblUserDetail user = _dbContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
+            var user = _dbUserContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
             string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.Password!);
             user.Password = encryptPassword;
-            _dbContext.Entry(user).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            _dbUserContext.Entry(user).State = EntityState.Modified;
+            _dbUserContext.SaveChanges();
             return true;
         }
     }

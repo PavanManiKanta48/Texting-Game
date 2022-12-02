@@ -10,8 +10,10 @@ namespace Service.Interface
     public interface IUserRoomServices
     {
         List<TblUserRoom> GetUsersRoom();
-        void AddUserToRoom(TblUserRoom addUser);
-        bool CheckExistUserId(TblUserRoom checkUser);       
-        void DeleteUserFromRoom(TblUserRoom deleteUser);
+        bool AddUserToRoom(TblUserRoom addUser);
+        bool CheckUserId(TblUserRoom checkuser);
+        bool CheckRoomId(TblUserRoom checkRoom);
+        bool CheckUserRoomId(TblUserRoom userRoom);
+        bool DeleteUserFromRoom(TblUserRoom deleteUserRoom);
     }
 }

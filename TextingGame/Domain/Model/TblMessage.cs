@@ -3,13 +3,15 @@ using System.Collections.Generic;
 
 namespace Persistence;
 
-public partial class TblUserRoom
+public partial class TblMessage
 {
-    public int PersonId { get; set; }
+    public int MessageId { get; set; }
 
     public int? RoomId { get; set; }
 
     public int? UserId { get; set; }
+
+    public string? Message { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

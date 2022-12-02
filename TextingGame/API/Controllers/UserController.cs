@@ -7,18 +7,16 @@ using Service.Services;
 
 namespace API.Controllers
 {
-   
-
-    [Route("api/[controller]")]
+   [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly DbTextingGameContext _dbContext;
-        private readonly IUserServices userService;
-        public UserController(DbTextingGameContext dbContext, IUserServices iuserDetail)
+        private readonly DbTextingGameContext _dbUserContext;
+        private readonly IUserServices _userService;
+        public UserController(DbTextingGameContext dbUserContext, IUserServices iuserDetail)
         {
-            _dbContext = dbContext;
-            userService = iuserDetail;
+            _dbUserContext = dbUserContext;
+            _userService = iuserDetail;
         }
 
         [HttpGet,Authorize]
@@ -26,7 +24,7 @@ namespace API.Controllers
         {
             try
             {
-                return new JsonResult(userService.GetUsers().ToList());
+                return new JsonResult(_userService.GetUsers().ToList());
             }
             catch (Exception ex)
             {
@@ -43,18 +41,17 @@ namespace API.Controllers
                 crudStatus.Status = false;
 
                 //check user exist or not
-                bool isUserExist = userService.CheckUserExist(register.EmailId!);
+                bool isUserExist = _userService.CheckUserExist(register.EmailId!);
                 if (isUserExist)
                     crudStatus.Message = "User Already Exists";
                 else if (register.Password != register.ConfirmPassword)
                     crudStatus.Message = "Password and Confirm password not match";
                 else
                 {
-                    userService.Register(register);
+                    _userService.Register(register);
                     crudStatus.Status = true;
                     crudStatus.Message = "User Registered Successfully";
                 }
-
                 return new JsonResult(crudStatus);
             }
             catch (Exception ex)
@@ -62,14 +59,15 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
-        [HttpPost]
-        [Route("LogIn")]
+
+        [HttpPost("LogIn")]
         public JsonResult UserLogIn(UserLogin logIn)
         {
             CrudStatus crudStatus = new CrudStatus();
+            crudStatus.Status = false;
             try
             {
-               var result = userService.UserLogIn(logIn);
+               var result = _userService.UserLogIn(logIn);
                 if (result !=null)
                 {
                     crudStatus.Status = true;
@@ -77,7 +75,6 @@ namespace API.Controllers
                 }
                 else
                 {
-                    crudStatus.Status = false;
                     crudStatus.Message = "Email and Password doesnt match";
                 }
                 return new JsonResult(crudStatus);
@@ -96,18 +93,17 @@ namespace API.Controllers
                 CrudStatus crudStatus = new CrudStatus();
                 crudStatus.Status = false;
                 //check user exist or not
-                bool isUserExist = userService.CheckUserExist(changePwd.EmailId!);
+                bool isUserExist = _userService.CheckUserExist(changePwd.EmailId!);
                 if (!isUserExist)
                     crudStatus.Message = "Email doesn't registered. Please Sign up";
                 else if (changePwd.Password != changePwd.ConfirmPassword)
                     crudStatus.Message = "Password and Confirm password not match";
                 else
                 {
-                    userService.ForgetPassword(changePwd);
+                    _userService.ForgetPassword(changePwd);
                     crudStatus.Status = true;
                     crudStatus.Message = "Password updated successfully";
                 }
-
                 return new JsonResult(crudStatus);
             }
             catch (Exception ex)

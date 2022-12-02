@@ -16,35 +16,35 @@ namespace XUnitTesting
         private readonly DbContextOptions<DbTextingGameContext> dbContextOptions = new DbContextOptionsBuilder<DbTextingGameContext>()
        .UseInMemoryDatabase(databaseName: "db_TextingGame")
         .Options;
-        public DbTextingGameContext context;
+        public DbTextingGameContext _context;
 
         public DatabaseFixure()
         {
-            context = new DbTextingGameContext(dbContextOptions);
-            context.Database.EnsureCreated();
+            _context = new DbTextingGameContext(dbContextOptions);
+            _context.Database.EnsureCreated();
             SeeDatabase();
         }
         public void SeeDatabase()
         {
             var user = new List<TblUserDetail>()
             {
-                new TblUserDetail(){UserId = 1,UserName = "Anshika",EmailId = "anshika@gmail.com",Password = "anshi12",CreatedDate = DateTime.Now,UpdatedDate = null,IsActive = true},
-                new TblUserDetail(){UserId = 2,UserName = "Pavan",EmailId = "pavan@gmail.com",Password = "pavan12",CreatedDate = DateTime.Now,UpdatedDate = null,IsActive = true}
+                new TblUserDetail(){UserId = 1,UserName = "Anshika",EmailId = "anshika@gmail.com",Password = "anshi12",MobileNo = "7867765564",CreatedDate = DateTime.Now,UpdatedDate = null,IsActive = true},
+                new TblUserDetail(){UserId = 2,UserName = "Pavan",EmailId = "pavan@gmail.com",Password = "pavan12",MobileNo = "6523776845",CreatedDate = DateTime.Now,UpdatedDate = null,IsActive = true}
             };
-            context.TblUserDetails.AddRange(user);
-            context.SaveChanges();
+            _context.TblUserDetails.AddRange(user);
+            _context.SaveChanges();
             var user1 = new List<TblRoom>()
             {
-                new TblRoom(){RoomId = 1,UserId = 2,RoomName = "FunGame",NumOfPeopele = 8,CheckIn = DateTime.Now,Updated = null,IsActive = true},
-                new TblRoom(){RoomId = 2,UserId = 2,RoomName = "TextGame",NumOfPeopele = 10,CheckIn = DateTime.Now,Updated = null,IsActive = true}
+                new TblRoom(){RoomId = 1,UserId = 2,RoomName = "FunGame",NumOfPeopele = 8,CreatedDate = DateTime.Now,UpdatedDate = null,IsActive = true},
+                new TblRoom(){RoomId = 2,UserId = 2,RoomName = "TextGame",NumOfPeopele = 10,CreatedDate = DateTime.Now,UpdatedDate= null,IsActive = true}
             };
-            context.TblRooms.AddRange(user1);
-            context.SaveChanges();
+            _context.TblRooms.AddRange(user1);
+            _context.SaveChanges();
         }
         public void Dispose()
         {
-            context.Database.EnsureDeleted();
-            context.Dispose();
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
         }
     }
 }
