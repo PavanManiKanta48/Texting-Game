@@ -1,14 +1,9 @@
 ﻿using Persistence;
 using Service.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class UserRoomServices:IUserRoomServices
+    public class UserRoomServices : IUserRoomServices
     {
         private readonly DbTextingGameContext _dbUserRoomContext;
 
@@ -50,19 +45,20 @@ namespace Service.Services
             var noofusers = checkroom.NumOfPeopele;
             if (checkroom != null)
             {
-                if (noofusers!=0)
+                if (noofusers != 0)
                 {
                     addUser.CreatedDate = DateTime.Now;
                     addUser.IsActive = true;
                     _dbUserRoomContext.TblUserRooms.Add(addUser);
-                     noofusers--;
+                    var usersno = noofusers--;
+                    //_dbUserRoomContext.TblUserRooms.Update(usersno);
                     _dbUserRoomContext.SaveChanges();
                 }
             }
             return true;
         }
 
-       // ..............Check User Room Id..............//
+        // ..............Check User Room Id..............//
         public bool CheckUserRoomId(TblUserRoom userRoom)
         {
             var checkuserRoomId = _dbUserRoomContext.TblUserRooms.Where(x => x.PersonId == userRoom.PersonId).FirstOrDefault()!;

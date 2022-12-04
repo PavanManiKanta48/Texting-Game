@@ -1,17 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Moq;
 using Persistence;
-using Service.Interface;
-using Service.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace XUnitTesting
 {
-   public class DatabaseFixure : IDisposable
+    public class DatabaseFixure : IDisposable
     {
         private readonly DbContextOptions<DbTextingGameContext> dbContextOptions = new DbContextOptionsBuilder<DbTextingGameContext>()
        .UseInMemoryDatabase(databaseName: "db_TextingGame")

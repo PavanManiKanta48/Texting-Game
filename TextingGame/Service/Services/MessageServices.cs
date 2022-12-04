@@ -1,15 +1,9 @@
 ﻿using Persistence;
 using Service.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
-   public class MessageServices : IMessageServices
+    public class MessageServices : IMessageServices
     {
         private readonly DbTextingGameContext _dbMessageContext;
 
@@ -28,7 +22,7 @@ namespace Service.Services
         //............Check User Id................//
         public bool CheckUserId(TblMessage message)
         {
-            var checkMessageUserId = _dbMessageContext.TblUserDetails.Where(r => r.UserId == message.UserId ).FirstOrDefault();
+            var checkMessageUserId = _dbMessageContext.TblUserDetails.Where(r => r.UserId == message.UserId).FirstOrDefault();
             if (checkMessageUserId != null)
                 return true;
             else

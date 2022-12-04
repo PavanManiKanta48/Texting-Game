@@ -1,27 +1,23 @@
 ﻿using Domain;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Service.Interface;
-using Service.Services;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]    
+    [ApiController]
     public class UserRoomController : ControllerBase
     {
         private readonly DbTextingGameContext _dbUserRoomContext;
         private readonly IUserRoomServices _userRoomServices;
 
-        public UserRoomController(DbTextingGameContext dbContext,IUserRoomServices userRoomServices)
+        public UserRoomController(DbTextingGameContext dbContext, IUserRoomServices userRoomServices)
         {
             _dbUserRoomContext = dbContext;
             _userRoomServices = userRoomServices;
         }
-        
+
         [HttpGet("GetUsersRoom")]
         public JsonResult GetUsersRoom()
         {

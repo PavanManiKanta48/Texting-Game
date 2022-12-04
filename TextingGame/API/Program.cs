@@ -27,6 +27,8 @@ builder.Services.AddScoped<IEncryptServices, EncryptServices>();
 builder.Services.AddScoped<IRoomServices, RoomServices>();
 builder.Services.AddScoped<IUserRoomServices, UserRoomServices>();
 builder.Services.AddScoped<IMessageServices, MessageServices>();
+builder.Services.AddScoped<ISendingSms, SendingSms>();
+//builder.Services.AddScoped<ISendingSms,ISendingSms>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -34,9 +36,9 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("ouath2", new OpenApiSecurityScheme
     {
         Description = "Standard Authorization header using the bearer schema(\"bearer {token}\")",
-        In=ParameterLocation.Header,
-        Name="Authorization",
-        Type=SecuritySchemeType.ApiKey
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
@@ -50,7 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
 

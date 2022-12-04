@@ -1,17 +1,11 @@
 ﻿using Persistence;
 using Service.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace XUnitTesting
 {
     [CollectionDefinition("DataBase Collection")]
     public class DatabaseCollection : ICollectionFixture<DatabaseFixure>
-    { 
+    {
     }
 
     [Collection("DataBase Collection")]
@@ -94,11 +88,11 @@ namespace XUnitTesting
             var result = _services.CheckExistRoomId(updateRoom);
             var expected = "Update Room Succesfull";
             //Assert
-            Assert.True(result,expected);
+            Assert.True(result, expected);
         }
 
         [Fact]
-       public void Check_with_RoomUpdate_WrongId()
+        public void Check_with_RoomUpdate_WrongId()
         {
             //Arrange
             var updateRoom = new TblRoom()
@@ -115,7 +109,7 @@ namespace XUnitTesting
             var result = _services.CheckExistRoomId(updateRoom);
             var expected = "Update Id is not matched";
             //Assert
-            Assert.False(result,expected);
+            Assert.False(result, expected);
         }
     }
 }
