@@ -13,10 +13,11 @@ namespace Service.Services
         }
 
         //...........Get User Message...........//
-        public List<TblMessage> GetMessages()
+        public List<TblMessage> GetMessages(int RoomId)
         {
-            var UserMessage = _dbMessageContext.TblMessages.ToList();
-            return UserMessage;
+            var UserMessage = _dbMessageContext.TblMessages.Where(x=>x.RoomId == RoomId).ToList();
+                return UserMessage;
+
         }
 
         //............Check User Id................//
@@ -40,8 +41,12 @@ namespace Service.Services
         }
 
         //..................User Add Message...................//
-        public bool AddMessages(TblMessage message)
+        public bool AddMessages(string Message,int RoomID,int UserId)
         {
+            TblMessage message = new TblMessage();
+            message.Message = Message;  
+            message.RoomId = RoomID;
+            message.UserId = UserId;
             message.CreatedDate = DateTime.Now;
             message.UpdatedDate = null;
             message.IsActive = true;
