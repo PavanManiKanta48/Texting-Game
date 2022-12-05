@@ -1,10 +1,8 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
 using Persistence;
 using Service.Interface;
-using Service.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,11 +14,13 @@ namespace API.Controllers
     {
         private readonly DbTextingGameContext _dbRoomcontext;
         private readonly IRoomServices _roomServices;
+        private readonly ISendingSms _sendingSms;
 
-        public RoomController(DbTextingGameContext dbContext, IRoomServices roomServices)
+        public RoomController(DbTextingGameContext dbContext, IRoomServices roomServices, ISendingSms sendingSms)
         {
             _dbRoomcontext = dbContext;
             _roomServices = roomServices;
+            _sendingSms = sendingSms;
         }
 
         // GET: api/<RoomController>
@@ -48,13 +48,13 @@ namespace API.Controllers
                 crudStatus.Status = false;
                 bool IsExistUserId = _roomServices.CheckExistUserId(room);
                 if (!IsExistUserId)
-                {                    
+                {
                     crudStatus.Message = "User unable to Create room because id is not matched";
                 }
                 else
                 {
-                   
-                   int roomid =  _roomServices.CreateRoom(room);
+
+                    int roomid = _roomServices.CreateRoom(room);
                     crudStatus.Status = true;
                     crudStatus.Message = "User Create room succesfully";
                     crudStatus.Data = roomid.ToString();
@@ -68,8 +68,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public 
-            JsonResult UpdateRoom(TblRoom room)
+        public JsonResult UpdateRoom(TblRoom room)
         {
             try
             {
@@ -87,6 +86,19 @@ namespace API.Controllers
                     crudStatus.Message = "User update room succesfully";
                 }
                 return new JsonResult(crudStatus);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpPost("send message")]
+        public JsonResult SendingSms(double phone, string message) //int roomid
+        {
+            try
+            {
+                return new JsonResult(_roomServices.SendSms(phone, message));
             }
             catch (Exception ex)
             {

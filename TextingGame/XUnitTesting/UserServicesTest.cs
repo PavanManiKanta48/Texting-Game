@@ -1,30 +1,19 @@
 ﻿using Domain;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Win32;
 using Moq;
 using Persistence;
 using Service.Interface;
 using Service.Services;
-using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace XUnitTesting
 {
     [Collection("DataBase Collection")]
-    public class UserServicesTest 
+    public class UserServicesTest
     {
         private readonly DatabaseFixure _fixure;
         private readonly UserServices _services;
         Mock<IEncryptServices> _encrypt;
-         private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public UserServicesTest(DatabaseFixure fixure)
         {
@@ -32,10 +21,10 @@ namespace XUnitTesting
             _encrypt = new Mock<IEncryptServices>();
             _configuration = new ConfigurationBuilder()
                .SetBasePath(Directory.GetCurrentDirectory())
-               .AddJsonFile(@"appsettings.json",false,false)
+               .AddJsonFile(@"appsettings.json", false, false)
                .AddEnvironmentVariables()
                 .Build();
-            _services = new UserServices(_fixure._context, _encrypt.Object,_configuration);
+            _services = new UserServices(_fixure._context, _encrypt.Object, _configuration);
         }
 
         //.........Get all User..........//
@@ -153,7 +142,7 @@ namespace XUnitTesting
                 Password = "anshi12",
                 ConfirmPassword = "anshi12"
             };
-       _encrypt.Setup(method => method.EncodePasswordToBase64(login.Password)).Returns(login.Password);
+            _encrypt.Setup(method => method.EncodePasswordToBase64(login.Password)).Returns(login.Password);
             //Act
             string result = _services.UserLogIn(login);
             //Assert

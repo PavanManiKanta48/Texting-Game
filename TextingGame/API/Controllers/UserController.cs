@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Service.Interface;
-using Service.Services;
 
 namespace API.Controllers
 {
-   [Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -19,7 +18,7 @@ namespace API.Controllers
             _userService = iuserDetail;
         }
 
-        [HttpGet,Authorize]
+        [HttpGet, Authorize]
         public JsonResult GetUsers()
         {
             try
@@ -67,8 +66,8 @@ namespace API.Controllers
             crudStatus.Status = false;
             try
             {
-               var result = _userService.UserLogIn(logIn);
-                if (result !=null)
+                var result = _userService.UserLogIn(logIn);
+                if (result != null)
                 {
                     crudStatus.Status = true;
                     crudStatus.Message = result;

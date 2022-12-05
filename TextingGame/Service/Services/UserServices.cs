@@ -11,7 +11,7 @@ using System.Text;
 namespace Service.Services
 {
     public class UserServices : EncryptServices, IUserServices
-    { 
+    {
         private readonly DbTextingGameContext _dbUserContext;
         private readonly IEncryptServices _encrypt;
         private readonly IConfiguration _configuration;
@@ -20,8 +20,8 @@ namespace Service.Services
         {
             _dbUserContext = dbUserContext;
             _encrypt = encrypt;
-            _configuration= configuration;
-      }
+            _configuration = configuration;
+        }
 
         //...........fetch User detail.........//
         public List<TblUserDetail> GetUsers()
@@ -35,7 +35,7 @@ namespace Service.Services
                                               MobileNo = user.MobileNo,
                                               CreatedDate = user.CreatedDate,
                                               UpdatedDate = user.UpdatedDate,
-                                               IsActive = user.IsActive
+                                              IsActive = user.IsActive
                                           }).ToList();
             return result.ToList();
         }
@@ -93,7 +93,7 @@ namespace Service.Services
                 expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
-      }
+        }
 
         //...........Forget Password.....................//
         public bool ForgetPassword(UserLogin changePwd)
