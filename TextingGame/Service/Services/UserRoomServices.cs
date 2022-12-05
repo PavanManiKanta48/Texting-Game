@@ -19,6 +19,13 @@ namespace Service.Services
             return usersinroom;
         }
 
+        //public List<TblRoom> Room(TblUserRoom user)
+        //{
+        //    //var room = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == user.RoomId).ToList()!;
+        //    var room = _dbUserRoomContext.TblRooms.Where(r => r.Equals(user)).ToList();
+        //    return room;
+        //}
+
         public bool CheckUserId(TblUserRoom checkUser)
         {
             var checkMessageUserId = _dbUserRoomContext.TblUserDetails.Where(r => r.UserId == checkUser.UserId).FirstOrDefault();
@@ -41,21 +48,22 @@ namespace Service.Services
         //..........Add User Room...................//
         public bool AddUserToRoom(TblUserRoom addUser)
         {
-            var checkroom = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == addUser.RoomId).FirstOrDefault();
-            var noofusers = checkroom.NumOfPeopele;
-            if (checkroom != null)
+            TblRoom room = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == addUser.RoomId).FirstOrDefault()!;
+            List<TblUserRoom> userRooms = _dbUserRoomContext.TblUserRooms.Where(r => r.RoomId == addUser.RoomId).ToList()!;
+            if (userRooms.Count <= room.NumOfPeopele)
             {
-                if (noofusers != 0)
-                {
-                    addUser.CreatedDate = DateTime.Now;
-                    addUser.IsActive = true;
-                    _dbUserRoomContext.TblUserRooms.Add(addUser);
-                    var usersno = noofusers--;
-                    //_dbUserRoomContext.TblUserRooms.Update(usersno);
-                    _dbUserRoomContext.SaveChanges();
-                }
+                addUser.CreatedDate = DateTime.Now;
+                addUser.IsActive = true;
+                _dbUserRoomContext.TblUserRooms.Add(addUser);
+                _dbUserRoomContext.SaveChanges();
+                return true;
+
             }
-            return true;
+            else
+            {
+                return false;
+
+            }
         }
 
         // ..............Check User Room Id..............//
