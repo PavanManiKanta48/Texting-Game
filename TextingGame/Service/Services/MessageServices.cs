@@ -13,10 +13,11 @@ namespace Service.Services
         }
 
         //...........Get User Message...........//
-        public List<TblMessage> GetMessages(int MessageId)
+        public List<TblMessage> GetMessages(int RoomId)
         {
-            var UserMessage = _dbMessageContext.TblMessages.Where(x=>x.MessageId == MessageId).ToList();
-            return UserMessage;
+            var UserMessage = _dbMessageContext.TblMessages.Where(x=>x.RoomId == RoomId).ToList();
+                return UserMessage;
+
         }
 
         //............Check User Id................//
