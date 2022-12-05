@@ -14,13 +14,13 @@ namespace Service.Services
     {
         private readonly DbTextingGameContext _dbUserContext;
         private readonly IEncryptServices _encrypt;
-        private readonly IConfiguration _configuration;
+        private readonly IGenrateToken _genrateToken;
 
-        public UserServices(DbTextingGameContext dbUserContext, IEncryptServices encrypt, IConfiguration configuration)
+        public UserServices(DbTextingGameContext dbUserContext, IEncryptServices encrypt, IGenrateToken genrateToken)
         {
             _dbUserContext = dbUserContext;
             _encrypt = encrypt;
-            _configuration = configuration;
+           _genrateToken = genrateToken;
         }
 
         //...........fetch User detail.........//
@@ -51,7 +51,7 @@ namespace Service.Services
         }
 
         //............Check Password .................//
-        public bool Register(Register register)
+        public string Register(Register register)
         {
             EncryptServices encrypt1 = new EncryptServices();
             string encryptPassword = encrypt1.EncodePasswordToBase64(register.Password!);
@@ -61,38 +61,21 @@ namespace Service.Services
             register.IsActive = true;
             _dbUserContext.TblUserDetails.Add(register);
             _dbUserContext.SaveChanges();
-            return true;
+            var token = _genrateToken.GenerateToken(register);
+            return token;
         }
 
         //...........User Login.....................//
-        public string UserLogIn(UserLogin login)
+        public string UserLogIn(UserLogin user)
         {
-            string encryptPassword = _encrypt.EncodePasswordToBase64(login.Password!);
-            var user = _dbUserContext.TblUserDetails.Where(x => x.EmailId == login.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
+            string encryptPassword = _encrypt.EncodePasswordToBase64(user.Password!);
+            var login = _dbUserContext.TblUserDetails.Where(x => x.EmailId == user.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
             if (user != null)
             {
-                var token = GenerateToken(login);
+                var token = _genrateToken.GenerateToken(login);
                 return token;
             }
             return null;
-        }
-
-        //..................Token.............//
-        private string GenerateToken(UserLogin user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier,user.EmailId!),
-                 new Claim(ClaimTypes.NameIdentifier,user.Password!),
-            };
-            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials: credentials);
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         //...........Forget Password.....................//
