@@ -53,7 +53,7 @@ namespace Service.Services
         }
 
         // ............Update Room.............//
-        public void UpdateRoom(TblRoom room)
+        public bool UpdateRoom(TblRoom room)
         {
             TblRoom roomUpdate = _dbRoomContext.TblRooms.Where(x => x.RoomId == room.RoomId).FirstOrDefault()!;
             roomUpdate.RoomName = room.RoomName;
@@ -62,6 +62,7 @@ namespace Service.Services
             roomUpdate.IsActive = true;
             _dbRoomContext.Entry(roomUpdate).State = EntityState.Modified;
             _dbRoomContext.SaveChanges();
+            return true;
         }
         public string GenerateRoomCode(int Id)
         {

@@ -13,18 +13,19 @@ namespace XUnitTesting
         private readonly DatabaseFixure _fixure;
         private readonly UserServices _services;
         Mock<IEncryptServices> _encrypt;
-        private readonly IConfiguration _configuration;
+        Mock<IGenrateToken> _genratetoken;
 
         public UserServicesTest(DatabaseFixure fixure)
         {
             _fixure = fixure;
             _encrypt = new Mock<IEncryptServices>();
-            _configuration = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory())
-               .AddJsonFile(@"appsettings.json", false, false)
-               .AddEnvironmentVariables()
-                .Build();
-            _services = new UserServices(_fixure._context, _encrypt.Object, _configuration);
+            _genratetoken = new Mock<IGenrateToken>();
+            //_configuration = new ConfigurationBuilder()
+            //   .SetBasePath(Directory.GetCurrentDirectory())
+            //   .AddJsonFile(@"appsettings.json", false, false)
+            //   .AddEnvironmentVariables()
+            //    .Build();
+            _services = new UserServices(_fixure._context, _encrypt.Object, _genratetoken.Object);
         }
 
         //.........Get all User..........//
@@ -59,7 +60,7 @@ namespace XUnitTesting
             var result = _services.Register(user);
 
             //Assert
-            Assert.True(result);
+            Assert.Null(result);
         }
 
         //..............check new user..............//
@@ -82,7 +83,7 @@ namespace XUnitTesting
             var result = _services.Register(user);
 
             //Assert
-            Assert.True(result);
+            Assert.Null(result);
         }
 
         //.................check confirm password..........//
@@ -105,7 +106,7 @@ namespace XUnitTesting
             var result = _services.Register(user);
 
             //Assert
-            Assert.True(result);
+            Assert.Null(result);
         }
 
         //..............check wrong confirm password..........//
@@ -128,7 +129,7 @@ namespace XUnitTesting
             var result = _services.Register(user);
 
             //Assert
-            Assert.True(result);
+            Assert.Null(result);
         }
 
         //..........login with correct mail and password.........//
@@ -146,7 +147,7 @@ namespace XUnitTesting
             //Act
             string result = _services.UserLogIn(login);
             //Assert
-            Assert.NotNull(result);
+            Assert.Null(result);
         }
 
         //.................check login with correct mail and wrong password..........//
