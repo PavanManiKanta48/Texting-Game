@@ -44,9 +44,17 @@ namespace API.Controllers
                     bool IsExistroomId = _userRoomServices.CheckRoomId(addUser);
                     if (IsExistroomId)
                     {
-                        _userRoomServices.AddUserToRoom(addUser);
-                        crudStatus.Status = true;
-                        crudStatus.Message = "User Joined Room succesfull";
+                        bool userinroom = _userRoomServices.AddUserToRoom(addUser);
+                        if (userinroom)
+                        {
+                            crudStatus.Status = true;
+                            crudStatus.Message = "room added successfully";
+                        }
+                        else
+                        {
+                            crudStatus.Status = false;
+                            crudStatus.Message = "Its Out Of limit";
+                        }
                     }
                     else
                     {
