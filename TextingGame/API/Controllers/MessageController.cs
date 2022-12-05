@@ -19,11 +19,11 @@ namespace API.Controllers
         }
 
         [HttpGet("GetUserMessage")]
-        public JsonResult GetUsersMessage()
+        public JsonResult GetUsersMessage(int MessageId)
         {
             try
             {
-                return new JsonResult(_messageServices.GetMessages().ToList());
+                return new JsonResult(_messageServices.GetMessages(MessageId).ToList());
             }
             catch (Exception ex)
             {
@@ -32,8 +32,12 @@ namespace API.Controllers
         }
 
         [HttpPost("AddUserMessage")]
-        public JsonResult AddUserMessage(TblMessage message)
+        public JsonResult AddUserMessage(string Message , int RoomId,int UserId)
         {
+            TblMessage message = new TblMessage();
+            message.RoomId = RoomId;
+            message.UserId = UserId;    
+            message.Message = Message;
             try
             {
                 CrudStatus crudStatus = new CrudStatus();
@@ -44,7 +48,7 @@ namespace API.Controllers
                     bool IsExistroomId = _messageServices.CheckRoomId(message);
                     if (IsExistroomId)
                     {
-                        _messageServices.AddMessages(message);
+                        _messageServices.AddMessages(Message,RoomId,UserId);
                         crudStatus.Status = true;
                         crudStatus.Message = "message sent succesfull";
                     }
