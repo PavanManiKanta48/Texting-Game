@@ -1,4 +1,5 @@
-﻿using Persistence;
+﻿using Domain;
+using Persistence;
 using Service.Interface;
 
 namespace Service.Services
@@ -15,8 +16,8 @@ namespace Service.Services
         //...........Get User Message...........//
         public List<TblMessage> GetMessages(int RoomId)
         {
-            var UserMessage = _dbMessageContext.TblMessages.Where(x=>x.RoomId == RoomId).ToList();
-                return UserMessage;
+            var UserMessage = _dbMessageContext.TblMessages.Where(x => x.RoomId == RoomId).ToList();
+            return UserMessage;
 
         }
 
@@ -41,10 +42,10 @@ namespace Service.Services
         }
 
         //..................User Add Message...................//
-        public bool AddMessages(string Message,int RoomID,int UserId)
+        public bool AddMessages(string Message, int RoomID, int UserId)
         {
             TblMessage message = new TblMessage();
-            message.Message = Message;  
+            message.Message = Message;
             message.RoomId = RoomID;
             message.UserId = UserId;
             message.CreatedDate = DateTime.Now;

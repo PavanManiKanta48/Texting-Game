@@ -1,4 +1,4 @@
-﻿using Persistence;
+﻿using Domain;
 
 namespace Service.Interface
 {

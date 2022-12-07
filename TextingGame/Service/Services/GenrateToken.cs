@@ -3,22 +3,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using Service.Interface;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
-   public class GenrateToken : IGenrateToken
+    public class GenrateToken : IGenrateToken
     {
         private readonly DbTextingGameContext _dbUserContext;
         private readonly IConfiguration _configuration;
 
-        public GenrateToken(DbTextingGameContext dbUserContext,IConfiguration configuration)
+        public GenrateToken(DbTextingGameContext dbUserContext, IConfiguration configuration)
         {
             _dbUserContext = dbUserContext;
             _configuration = configuration;

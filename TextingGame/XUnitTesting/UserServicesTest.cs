@@ -1,7 +1,5 @@
 ﻿using Domain;
-using Microsoft.Extensions.Configuration;
 using Moq;
-using Persistence;
 using Service.Interface;
 using Service.Services;
 
@@ -58,9 +56,10 @@ namespace XUnitTesting
 
             //Act
             var result = _services.Register(user);
+            var excepted = "succesfully registered";
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal(result, excepted);
         }
 
         //..............check new user..............//

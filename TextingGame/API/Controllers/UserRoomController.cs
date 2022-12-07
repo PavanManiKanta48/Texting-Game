@@ -82,7 +82,7 @@ namespace API.Controllers
             {
                 CrudStatus crudStatus = new CrudStatus();
                 crudStatus.Status = false;
-                bool isExistUserRoomId = _userRoomServices.CheckUserRoomId(deleteUserRoom);
+                bool isExistUserRoomId = _userRoomServices.CheckRoomId(deleteUserRoom);
                 if (isExistUserRoomId)
                 {
                     _userRoomServices.DeleteUserFromRoom(deleteUserRoom);

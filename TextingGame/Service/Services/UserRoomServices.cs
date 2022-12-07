@@ -1,4 +1,5 @@
-﻿using Persistence;
+﻿using Domain;
+using Persistence;
 using Service.Interface;
 
 namespace Service.Services
@@ -36,9 +37,9 @@ namespace Service.Services
         }
 
         //............Check Room Id ..................//
-        public bool CheckRoomId(TblUserRoom checkRoom)
+        public bool CheckRoomId(TblUserRoom checkroom)
         {
-            var checkMessageRoomId = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == checkRoom.RoomId).FirstOrDefault();
+            var checkMessageRoomId = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == checkroom.RoomId).FirstOrDefault();
             if (checkMessageRoomId != null)
                 return true;
             else
@@ -67,22 +68,32 @@ namespace Service.Services
         }
 
         // ..............Check User Room Id..............//
-        public bool CheckUserRoomId(TblUserRoom userRoom)
+        public bool CheckPersonId(TblUserRoom userRoom)
         {
             var checkuserRoomId = _dbUserRoomContext.TblUserRooms.Where(x => x.PersonId == userRoom.PersonId).FirstOrDefault()!;
             if (checkuserRoomId != null)
                 return true;
             else
                 return false;
+
         }
 
         //................Delete User Room................//
         public bool DeleteUserFromRoom(TblUserRoom deleteUserRoom)
         {
-            var deleteFromRoom = _dbUserRoomContext.TblUserRooms.Where(x => x.PersonId == deleteUserRoom.PersonId).FirstOrDefault()!;
-            _dbUserRoomContext.TblUserRooms.Remove(deleteFromRoom);
+            var deleteFromRoom = _dbUserRoomContext.TblUserRooms.Where(x => x.RoomId == deleteUserRoom.RoomId).ToList();
+            foreach (var user in deleteFromRoom)
+            {
+                _dbUserRoomContext.TblUserRooms.Remove(user);
+
+            }
             _dbUserRoomContext.SaveChanges();
             return true;
         }
+        //public bool DeleteRoomByID(int id)
+        //{
+        //    var deleteroom = _dbUserRoomContext.TblRooms.Where(x => x.RoomId==id).FirstOrDefault();
+
+        //}
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Service.Interface;
-using Twilio.TwiML.Messaging;
 
 namespace API.Controllers
 {
@@ -24,7 +23,7 @@ namespace API.Controllers
         {
             try
             {
-                
+
                 return new JsonResult(_messageServices.GetMessages(RoomId).ToList());
             }
             catch (Exception ex)
@@ -34,7 +33,7 @@ namespace API.Controllers
         }
 
         [HttpPost("AddUserMessage")]
-        public JsonResult AddUserMessage(string Message , int RoomId,int UserId)
+        public JsonResult AddUserMessage(string Message, int RoomId, int UserId)
         {
             try
             {
@@ -52,7 +51,7 @@ namespace API.Controllers
                     bool IsExistroomId = _messageServices.CheckRoomId(message);
                     if (IsExistroomId)
                     {
-                        _messageServices.AddMessages(Message,RoomId,UserId);
+                        _messageServices.AddMessages(Message, RoomId, UserId);
                         crudStatus.Status = true;
                         crudStatus.Message = "message sent succesfull";
                     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace XUnitTesting
@@ -31,6 +32,13 @@ namespace XUnitTesting
                 new TblRoom(){RoomId = 2,UserId = 2,RoomName = "TextGame",NumOfPeopele = 10,CreatedDate = DateTime.Now,UpdatedDate= null,IsActive = true}
             };
             _context.TblRooms.AddRange(user1);
+            _context.SaveChanges();
+            var user2 = new List<TblUserRoom>()
+            {
+                new TblUserRoom(){PersonId=1,UserId=1,RoomId=1,CreatedDate=DateTime.Now,UpdatedDate=null,IsActive = true},
+                new TblUserRoom(){PersonId=2,UserId=2,RoomId=2,CreatedDate=DateTime.Now,UpdatedDate=null,IsActive = true}
+            };
+            _context.TblUserRooms.AddRange(user2);
             _context.SaveChanges();
         }
         public void Dispose()

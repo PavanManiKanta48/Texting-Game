@@ -1,4 +1,4 @@
-﻿using Persistence;
+﻿using Domain;
 
 namespace Service.Interface
 {
@@ -8,7 +8,7 @@ namespace Service.Interface
         bool AddUserToRoom(TblUserRoom addUser);
         bool CheckUserId(TblUserRoom checkuser);
         bool CheckRoomId(TblUserRoom checkRoom);
-        bool CheckUserRoomId(TblUserRoom userRoom);
+        bool CheckPersonId(TblUserRoom userRoom);
         bool DeleteUserFromRoom(TblUserRoom deleteUserRoom);
     }
 }
