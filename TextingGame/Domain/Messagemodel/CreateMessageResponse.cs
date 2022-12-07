@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Messagemodel
 {
-    public class CreateUserRoomRequestModel
+    public class CreateMessageResponse:BaseResponseModel
     {
-        public int? RoomId { get; set; }
-        public string Message { get; set; } = null!;
+        public CreateUserRoomRequestModel createUserRoomResponse { get; set; }
     }
 }
