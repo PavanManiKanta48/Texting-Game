@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Moq;
+using Persistence.Model;
 using Service.Interface;
 using Service.Services;
 
@@ -32,7 +33,7 @@ namespace XUnitTesting
         {
             var result = _services.GetUsers();
             //Act
-            var items = Assert.IsType<List<TblUserDetail>>(result);
+            var items = Assert.IsType<List<TblUser>>(result);
             //Assert
             Assert.Equal(2, items.Count);
         }
@@ -50,7 +51,7 @@ namespace XUnitTesting
                 MobileNo = "7867765564",
                 ConfirmPassword = "anshi12",
                 CreatedDate = DateTime.Now,
-                UpdatedDate = null,
+                UpdatedDate = DateTime.Now,
                 IsActive = true
             };
 
@@ -74,7 +75,7 @@ namespace XUnitTesting
                 Password = "shirien12",
                 ConfirmPassword = "shirien12",
                 CreatedDate = DateTime.Now,
-                UpdatedDate = null,
+                UpdatedDate = DateTime.Now,
                 IsActive = true
             };
 
@@ -97,7 +98,7 @@ namespace XUnitTesting
                 Password = "pavan12",
                 ConfirmPassword = "pavan12",
                 CreatedDate = DateTime.Now,
-                UpdatedDate = null,
+                UpdatedDate = DateTime.Now,
                 IsActive = true
             };
 
@@ -120,7 +121,7 @@ namespace XUnitTesting
                 Password = "anshi12",
                 ConfirmPassword = "4321",
                 CreatedDate = DateTime.Now,
-                UpdatedDate = null,
+                UpdatedDate = DateTime.Now,
                 IsActive = true
             };
 
