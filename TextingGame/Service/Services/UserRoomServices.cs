@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Persistence;
+using Persistence.Model;
 using Service.Interface;
 
 namespace Service.Services
@@ -29,7 +30,7 @@ namespace Service.Services
 
         public bool CheckUserId(TblUserRoom checkUser)
         {
-            var checkMessageUserId = _dbUserRoomContext.TblUserDetails.Where(r => r.UserId == checkUser.UserId).FirstOrDefault();
+            var checkMessageUserId = _dbUserRoomContext.TblUsers.Where(r => r.UserId == checkUser.UserId).FirstOrDefault();
             if (checkMessageUserId != null)
                 return true;
             else
@@ -70,7 +71,7 @@ namespace Service.Services
         // ..............Check User Room Id..............//
         public bool CheckPersonId(TblUserRoom userRoom)
         {
-            var checkuserRoomId = _dbUserRoomContext.TblUserRooms.Where(x => x.PersonId == userRoom.PersonId).FirstOrDefault()!;
+            var checkuserRoomId = _dbUserRoomContext.TblUserRooms.Where(x => x.UserRoomId == userRoom.UserRoomId).FirstOrDefault()!;
             if (checkuserRoomId != null)
                 return true;
             else

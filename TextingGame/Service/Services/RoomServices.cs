@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Persistence.Model;
 using Service.Interface;
 
 namespace Service.Services
@@ -27,7 +28,7 @@ namespace Service.Services
         public bool CheckExistUserId(TblRoom room)
 
         {
-            var room1 = _dbRoomContext.TblUserDetails.Where(x => x.UserId == room.UserId).FirstOrDefault()!;
+            var room1 = _dbRoomContext.TblUsers.Where(x => x.UserId == room.RoomId).FirstOrDefault()!;
             if (room1 != null)
                 return true;
             else
@@ -38,7 +39,7 @@ namespace Service.Services
         public int CreateRoom(TblRoom room)
         {
             room.CreatedDate = DateTime.Now;
-            room.UpdatedDate = null;
+            room.UpdatedDate = DateTime.Now;
             room.IsActive = true;
             _dbRoomContext.TblRooms.Add(room);
             _dbRoomContext.SaveChanges();

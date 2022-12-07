@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
+using Persistence.Model;
 using Service.Interface;
 
 namespace API.Controllers
