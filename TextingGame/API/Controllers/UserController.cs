@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.UserModel;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Persistence.Model;
@@ -32,30 +33,27 @@ namespace API.Controllers
         }
 
         [HttpPost("UserRegister")]
-        public JsonResult UserRegister(Register register)
+        public BaseResponseModel UserRegister(CreateUserRequestmodel createUserRequestmodel)
         {
             try
             {
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
+                //Validate the incoming model
+                BaseResponseModel errorModel = _userService.ValidateUserRequestModel(createUserRequestmodel);
 
-                //check user exist or not
-                bool isUserExist = _userService.CheckUserExist(register.EmailId!);
-                if (isUserExist)
-                    crudStatus.Message = "User Already Exists";
-                else if (register.Password != register.ConfirmPassword)
-                    crudStatus.Message = "Password and Confirm password not match";
-                else
+                //check to see if the validation has failed
+                if (errorModel.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    _userService.Register(register);
-                    crudStatus.Status = true;
-                    crudStatus.Message = "User Registered Successfully";
+                    return errorModel;
                 }
-                return new JsonResult(crudStatus);
+                return _userService.Register(createUserRequestmodel);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                };
             }
         }
 
