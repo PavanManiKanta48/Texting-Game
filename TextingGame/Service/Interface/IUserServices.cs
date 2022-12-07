@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.UserModel;
 using Persistence.Model;
 
 namespace Service.Interface
@@ -7,9 +8,10 @@ namespace Service.Interface
     {
         List<TblUser> GetUsers();
         bool CheckUserExist(string email);
-        string Register(Register register);
+        BaseResponseModel Register(CreateUserRequestmodel register);
         string UserLogIn(UserLogin login);
         bool ForgetPassword(UserLogin changePwd);
+        BaseResponseModel ValidateUserRequestModel(CreateUserRequestmodel createUserRequestmodel);
 
     }
 }

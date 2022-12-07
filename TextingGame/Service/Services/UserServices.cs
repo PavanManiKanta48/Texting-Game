@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.UserModel;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Model;
@@ -23,16 +24,40 @@ namespace Service.Services
         public List<TblUser> GetUsers()
         {
             List<TblUser> result = (from user in _dbUserContext.TblUsers
-                                          select new TblUser
-                                          {
-                                              UserName = user.UserName,
-                                              EmailId = user.EmailId,
-                                              MobileNo = user.MobileNo,
-                                          }).ToList();
+                                    select new TblUser
+                                    {
+                                        UserName = user.UserName,
+                                        EmailId = user.EmailId,
+                                        MobileNo = user.MobileNo,
+                                    }).ToList();
             return result.ToList();
         }
 
         //............Check User Email...........// 
+
+        public BaseResponseModel ValidateUserRequestModel(CreateUserRequestmodel createUserRequestmodel)
+        {
+            if (CheckUserExist(createUserRequestmodel.EmailId!))
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "User Already Exists"
+                };
+            }
+            if (createUserRequestmodel.Password != createUserRequestmodel.ConfirmPassword)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "Password and Confirm password not match"
+                };
+            }
+            return new BaseResponseModel()
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+            };
+        }
         public bool CheckUserExist(string email)
         {
             var user = _dbUserContext.TblUsers.Where(x => x.EmailId == email).FirstOrDefault();
@@ -43,19 +68,40 @@ namespace Service.Services
         }
 
         //............Check Password .................//
-        public string Register(Register register)
+        public BaseResponseModel Register(CreateUserRequestmodel createUserRequestmodel)
         {
+            //Refactor the following code later using Automapper
+            //Convert API model to DB model
             EncryptServices encrypt1 = new EncryptServices();
-            string encryptPassword = encrypt1.EncodePasswordToBase64(register.Password!);
-            register.Password = encryptPassword;
-            register.CreatedDate = DateTime.Now;
-            register.UpdatedDate = DateTime.Now;
-            register.IsActive = true;
-            _dbUserContext.TblUsers.Add(register);
-            _dbUserContext.SaveChanges();
-            //var token = _genrateToken.GenerateToken(register);
-            //return token;
-            return "succesfully registered";
+
+            TblUser tblUser = new TblUser()
+            {
+                UserName = createUserRequestmodel.UserName,
+                Password = encrypt1.EncodePasswordToBase64(createUserRequestmodel.Password!),
+                MobileNo = createUserRequestmodel.MobileNo,
+                EmailId = createUserRequestmodel.EmailId,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now,
+                IsActive = true
+            };
+            _dbUserContext.TblUsers.Add(tblUser);
+            try
+            {
+                _dbUserContext.SaveChanges();
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    SuccessMessage = "User created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                };
+            }
         }
 
         //...........User Login.....................//

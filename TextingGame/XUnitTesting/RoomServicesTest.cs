@@ -96,11 +96,7 @@ namespace XUnitTesting
             //Arrange
             var updateRoom = new TblRoom()
             {
-<<<<<<< Updated upstream
                 RoomId = 8,
-=======
-                RoomId = 8,    
->>>>>>> Stashed changes
                 RoomName = "textGame",
                 NumOfPeopele = 12,
                 CreatedDate = DateTime.Now,
