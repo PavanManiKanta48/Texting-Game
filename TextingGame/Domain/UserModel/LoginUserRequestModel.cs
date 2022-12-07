@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.UserModel
 {
-    public class PostLoginUserRequestModel
+    public class LoginUserRequestModel
     {
         public string? EmailId { get; set; }
         public string? Password { get; set; }

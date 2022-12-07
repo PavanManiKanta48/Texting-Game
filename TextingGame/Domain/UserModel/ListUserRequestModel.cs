@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.UserModel
 {
-    public class GetUserRequestModel
+    public class ListUserRequestModel
     {
         public string? UserName { get; set; }
 

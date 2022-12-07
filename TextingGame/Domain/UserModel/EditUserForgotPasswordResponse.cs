@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.UserModel
 {
-    public class EditUserForgotPasswordResponse
+    public class EditUserForgotPasswordResponse : BaseResponseModel
     {
+        public UserForgotPasswordRequestModel UserForgotPasswordRequest { get; set; }
     }
 }
