@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Persistence;
+using Persistence.Model;
 using Service.Interface;
 
 namespace Service.Services
@@ -24,7 +25,7 @@ namespace Service.Services
         //............Check User Id................//
         public bool CheckUserId(TblMessage message)
         {
-            var checkMessageUserId = _dbMessageContext.TblUserDetails.Where(r => r.UserId == message.UserId).FirstOrDefault();
+            var checkMessageUserId = _dbMessageContext.TblUsers.Where(r => r.UserId == message.UserId).FirstOrDefault();
             if (checkMessageUserId != null)
                 return true;
             else
@@ -49,7 +50,7 @@ namespace Service.Services
             message.RoomId = RoomID;
             message.UserId = UserId;
             message.CreatedDate = DateTime.Now;
-            message.UpdatedDate = null;
+            message.UpdatedDate = DateTime.Now;
             message.IsActive = true;
             _dbMessageContext.TblMessages.Add(message);
             _dbMessageContext.SaveChanges();

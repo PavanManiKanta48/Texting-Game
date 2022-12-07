@@ -1,9 +1,10 @@
 ﻿using Domain;
+using Persistence.Model;
 
 namespace Service.Interface
 {
     public interface IGenrateToken
     {
-        string GenerateToken(TblUserDetail user);
+        string GenerateToken(TblUser user);
     }
 }

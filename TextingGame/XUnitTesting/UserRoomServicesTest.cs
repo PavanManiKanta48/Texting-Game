@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Persistence.Model;
 using Service.Services;
 
 namespace XUnitTesting
@@ -32,11 +33,11 @@ namespace XUnitTesting
             //Arrange
             var addingtoRoom = new TblUserRoom()
             {
-                PersonId = 3,
+                UserRoomId = 3,
                 RoomId = 1,
                 UserId = 2,
                 CreatedDate = DateTime.Now,
-                UpdatedDate = null,
+                UpdatedDate = DateTime.Now,
                 IsActive = true
             };
             //Act
@@ -51,11 +52,11 @@ namespace XUnitTesting
             //Arrange
             var addingtoRoom = new TblUserRoom()
             {
-                PersonId = 3,
+                UserRoomId = 3,
                 RoomId = 1,
                 UserId = 2,
                 CreatedDate = DateTime.Now,
-                UpdatedDate = null,
+                UpdatedDate = DateTime.Now,
                 IsActive = true
             };
             //Act
@@ -70,11 +71,11 @@ namespace XUnitTesting
             //Arrange
             var deleteUser = new TblUserRoom()
             {
-                PersonId = 5,
+                UserRoomId = 5,
                 RoomId = 4,
                 UserId = 1,
                 CreatedDate = DateTime.Now,
-                UpdatedDate = null,
+                UpdatedDate = DateTime.Now,
                 IsActive = true
             };
             //Act
@@ -89,11 +90,11 @@ namespace XUnitTesting
             //Arrange
             var deleteUser = new TblUserRoom()
             {
-                PersonId = 6,
+                UserRoomId = 6,
                 RoomId = 4,
                 UserId = 3,
                 CreatedDate = DateTime.Now,
-                UpdatedDate = null,
+                UpdatedDate = DateTime.Now,
                 IsActive = true
             };
             //Act

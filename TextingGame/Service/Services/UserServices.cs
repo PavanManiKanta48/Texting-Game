@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Persistence.Model;
 using Service.Interface;
 
 namespace Service.Services
@@ -19,10 +20,10 @@ namespace Service.Services
         }
 
         //...........fetch User detail.........//
-        public List<TblUserDetail> GetUsers()
+        public List<TblUser> GetUsers()
         {
-            List<TblUserDetail> result = (from user in _dbUserContext.TblUserDetails
-                                          select new TblUserDetail
+            List<TblUser> result = (from user in _dbUserContext.TblUsers
+                                          select new TblUser
                                           {
                                               UserName = user.UserName,
                                               EmailId = user.EmailId,
@@ -34,7 +35,7 @@ namespace Service.Services
         //............Check User Email...........// 
         public bool CheckUserExist(string email)
         {
-            var user = _dbUserContext.TblUserDetails.Where(x => x.EmailId == email).FirstOrDefault();
+            var user = _dbUserContext.TblUsers.Where(x => x.EmailId == email).FirstOrDefault();
             if (user != null)
                 return true;
             else
@@ -48,9 +49,9 @@ namespace Service.Services
             string encryptPassword = encrypt1.EncodePasswordToBase64(register.Password!);
             register.Password = encryptPassword;
             register.CreatedDate = DateTime.Now;
-            register.UpdatedDate = null;
+            register.UpdatedDate = DateTime.Now;
             register.IsActive = true;
-            _dbUserContext.TblUserDetails.Add(register);
+            _dbUserContext.TblUsers.Add(register);
             _dbUserContext.SaveChanges();
             //var token = _genrateToken.GenerateToken(register);
             //return token;
@@ -61,7 +62,7 @@ namespace Service.Services
         public string UserLogIn(UserLogin user)
         {
             string encryptPassword = _encrypt.EncodePasswordToBase64(user.Password!);
-            var login = _dbUserContext.TblUserDetails.Where(x => x.EmailId == user.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
+            var login = _dbUserContext.TblUsers.Where(x => x.EmailId == user.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
             if (user != null)
             {
                 var token = _genrateToken.GenerateToken(login);
@@ -73,7 +74,7 @@ namespace Service.Services
         //...........Forget Password.....................//
         public bool ForgetPassword(UserLogin changePwd)
         {
-            var user = _dbUserContext.TblUserDetails.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
+            var user = _dbUserContext.TblUsers.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
             string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.Password!);
             user.Password = encryptPassword;
             _dbUserContext.Entry(user).State = EntityState.Modified;

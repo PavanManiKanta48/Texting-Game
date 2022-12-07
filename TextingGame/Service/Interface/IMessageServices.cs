@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Persistence.Model;
 
 namespace Service.Interface
 {

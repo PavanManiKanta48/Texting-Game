@@ -1,4 +1,6 @@
 ﻿using Domain;
+using Persistence.Model;
+
 namespace Service.Interface
 {
     public interface IRoomServices
