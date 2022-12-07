@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.UserModel
 {
-    public class UserLoginResponse
+    public class UserLoginResponse : BaseResponseModel
     {
+        public LoginUserRequestModel LoginUserRequest { get; set; } 
     }
 }
