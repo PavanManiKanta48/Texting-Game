@@ -1,4 +1,4 @@
-﻿namespace Persistence;
+﻿namespace Domain;
 
 public partial class TblRoom
 {

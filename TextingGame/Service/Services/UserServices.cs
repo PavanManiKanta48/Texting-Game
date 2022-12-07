@@ -1,12 +1,7 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using Service.Interface;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Service.Services
 {
@@ -20,7 +15,7 @@ namespace Service.Services
         {
             _dbUserContext = dbUserContext;
             _encrypt = encrypt;
-           _genrateToken = genrateToken;
+            _genrateToken = genrateToken;
         }
 
         //...........fetch User detail.........//
@@ -29,13 +24,9 @@ namespace Service.Services
             List<TblUserDetail> result = (from user in _dbUserContext.TblUserDetails
                                           select new TblUserDetail
                                           {
-                                              UserId = user.UserId,
                                               UserName = user.UserName,
                                               EmailId = user.EmailId,
                                               MobileNo = user.MobileNo,
-                                              CreatedDate = user.CreatedDate,
-                                              UpdatedDate = user.UpdatedDate,
-                                              IsActive = user.IsActive
                                           }).ToList();
             return result.ToList();
         }
@@ -61,8 +52,9 @@ namespace Service.Services
             register.IsActive = true;
             _dbUserContext.TblUserDetails.Add(register);
             _dbUserContext.SaveChanges();
-            var token = _genrateToken.GenerateToken(register);
-            return token;
+            //var token = _genrateToken.GenerateToken(register);
+            //return token;
+            return "succesfully registered";
         }
 
         //...........User Login.....................//

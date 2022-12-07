@@ -92,7 +92,7 @@ namespace API.Controllers
                 return new JsonResult(ex.Message);
             }
         }
-        [Authorize]
+        //[Authorize]
         [HttpPost("send message")]
         public JsonResult SendingSms(double phone, string message) //int roomid
         {

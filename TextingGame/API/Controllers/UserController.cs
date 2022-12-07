@@ -1,5 +1,4 @@
 ﻿using Domain;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Service.Interface;
@@ -18,7 +17,7 @@ namespace API.Controllers
             _userService = iuserDetail;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet]
         public JsonResult GetUsers()
         {
             try
