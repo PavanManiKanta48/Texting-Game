@@ -22,18 +22,19 @@ namespace Service.Services
         //...........Fetch Data...........//
         public List<RoomResponse> GetRoom(int userId)
         {
-           List<RoomResponse> result = (from user in _dbRoomContext.TblRooms join
-                                                 joinusers in _dbRoomContext.TblUserRooms 
-                                                 on user.RoomId equals joinusers.RoomId select new RoomResponse                                                  
-                                                 {
-
-                                                     RoomId=user.RoomId,
-                                                     RoomName=user.RoomName
-                                                 }).ToList();
-            return result;
-            //var users = _dbRoomContext.TblRooms.ToList();
-            //return users;
-
+            List<RoomResponse> userRooms = (from userRoom in _dbRoomContext.TblUserRooms
+                                            join users in _dbRoomContext.TblUsers on userRoom.UserId equals users.UserId
+                                            where userRoom.UserId == userId
+                                            select new RoomResponse()
+                                            {
+                                                RoomId = userRoom.RoomId ?? 0,
+                                                RoomName = users.UserName
+                                            }).ToList();
+            if(userRooms.Any())
+            {
+                return userRooms;
+            }
+            return new List<RoomResponse>();
         }
 
         //.........Check room Exist...........//
@@ -46,7 +47,7 @@ namespace Service.Services
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
                     ErrorMessage = "Room Already Exists"
                 };
-            }            
+            }
             return new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
@@ -64,7 +65,7 @@ namespace Service.Services
         //...........Create Room..........//
         public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
         {
-            
+
             TblRoom room = new TblRoom()
             {
                 RoomName = createRoomRequestModel.RoomName,
@@ -72,8 +73,8 @@ namespace Service.Services
                 IsActive = true,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
-                CreatedBy=2,
-                UpdatedBy=1
+                CreatedBy = 2,
+                UpdatedBy = 1
             };
             _dbRoomContext.TblRooms.Add(room);
             try

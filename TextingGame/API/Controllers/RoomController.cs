@@ -29,12 +29,17 @@ namespace API.Controllers
         }
 
         // GET: api/<RoomController>
-       // [Authorize]
+        // [Authorize]
         [HttpGet]
         public List<RoomResponse> GetRoom(int userId)
         {
             try
             {
+                //Validation
+                if (userId == 0)
+                {
+                    return new List<RoomResponse>();
+                }
                 return _roomServices.GetRoom(userId);
             }
             catch (Exception ex)
@@ -54,7 +59,7 @@ namespace API.Controllers
                     return errorModel;
                 }
                 return _roomServices.CreateRoom(createRoomRequestModel);
-               
+
             }
             catch (Exception ex)
             {
