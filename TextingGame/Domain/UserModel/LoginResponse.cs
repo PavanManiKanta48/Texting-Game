@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.UserModel
+﻿namespace Domain.UserModel
 {
     public class UserLoginResponse : BaseResponseModel
     {
-        public LoginUserRequestModel LoginUserRequest { get; set; } 
+        public LoginUserRequestModel LoginUserRequest { get; set; }
     }
 }

@@ -1,7 +1,5 @@
-﻿using Domain;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Persistence;
 using Persistence.Model;
 using Service.Interface;
 using System.IdentityModel.Tokens.Jwt;

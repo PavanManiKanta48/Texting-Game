@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.RoomModel
+﻿namespace Domain.RoomModel
 {
-    public class CreateRoomResponse:BaseResponseModel
+    public class CreateRoomResponse : BaseResponseModel
     {
         public CreateRoomRequestModel createRoomResponse { get; set; }
     }

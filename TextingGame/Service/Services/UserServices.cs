@@ -1,7 +1,6 @@
 ﻿using Domain;
 using Domain.UserModel;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using Persistence.Model;
 using Service.Interface;
 
@@ -20,17 +19,19 @@ namespace Service.Services
             _genrateToken = genrateToken;
         }
 
-        //...........fetch User detail.........//
-        public List<TblUser> GetUsers()
+        //...........fetch User detail.........//       
+        public List<ListUserRequestModel> GetUsers()
         {
-            List<TblUser> result = (from user in _dbUserContext.TblUsers
-                                    select new TblUser
-                                    {
-                                        UserName = user.UserName,
-                                        EmailId = user.EmailId,
-                                        MobileNo = user.MobileNo,
-                                    }).ToList();
-            return result.ToList();
+            List<ListUserRequestModel> result = (from user in _dbUserContext.TblUsers
+                                                 select new ListUserRequestModel()
+                                                 {
+                                                     UserName = user.UserName,
+                                                     EmailId = user.EmailId,
+                                                     MobileNo = user.MobileNo,
+                                                 }).ToList();
+
+
+            return result;
         }
 
         //............Check User Email...........// 
@@ -76,7 +77,7 @@ namespace Service.Services
 
             TblUser tblUser = new TblUser()
             {
-                UserName = createUserRequestmodel.UserName,
+                UserName = createUserRequestmodel.Name,
                 Password = encrypt1.EncodePasswordToBase64(createUserRequestmodel.Password!),
                 MobileNo = createUserRequestmodel.MobileNo,
                 EmailId = createUserRequestmodel.EmailId,
@@ -105,27 +106,77 @@ namespace Service.Services
         }
 
         //...........User Login.....................//
-        public string UserLogIn(UserLogin user)
+        public BaseResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel)
         {
-            string encryptPassword = _encrypt.EncodePasswordToBase64(user.Password!);
-            var login = _dbUserContext.TblUsers.Where(x => x.EmailId == user.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
-            if (user != null)
+            string encryptPassword = _encrypt.EncodePasswordToBase64(loginUserRequestModel.Password!);
+            var login = _dbUserContext.TblUsers.Where(x => x.EmailId == loginUserRequestModel.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
+            try
             {
-                var token = _genrateToken.GenerateToken(login);
-                return token;
+                if (login != null)
+                {
+                    //var token = _genrateToken.GenerateToken(login);
+                    return new BaseResponseModel()
+                    {
+                        StatusCode = System.Net.HttpStatusCode.OK,
+                        SuccessMessage = "User Login SuccessFully"
+                    };
+                }
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "Invalid User"
+                };
+
             }
-            return null;
+            catch (Exception ex)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                };
+            }
+
         }
 
         //...........Forget Password.....................//
-        public bool ForgetPassword(UserLogin changePwd)
+        public BaseResponseModel ForgetPassword(UserForgotPasswordRequestModel userForgotPasswordRequestModel)
         {
-            var user = _dbUserContext.TblUsers.Where(x => x.EmailId == changePwd.EmailId).FirstOrDefault()!;
-            string encryptPassword = _encrypt.EncodePasswordToBase64(changePwd.Password!);
-            user.Password = encryptPassword;
-            _dbUserContext.Entry(user).State = EntityState.Modified;
-            _dbUserContext.SaveChanges();
-            return true;
+            var user = _dbUserContext.TblUsers.Where(x => x.EmailId == userForgotPasswordRequestModel.EmailId).FirstOrDefault()!;
+            string encryptPassword = _encrypt.EncodePasswordToBase64(userForgotPasswordRequestModel.Password!);
+            try
+            {
+                if (user != null)
+                {
+                    user.Password = encryptPassword;
+                    _dbUserContext.Entry(user).State = EntityState.Modified;
+                    _dbUserContext.SaveChanges();
+                    return new BaseResponseModel()
+                    {
+                        StatusCode = System.Net.HttpStatusCode.OK,
+                        SuccessMessage = "Password reset  Successfully"
+                    };
+                }
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "Email Does Not Register"
+                };
+
+
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                };
+            }
+            //user.Password = encryptPassword;
+            //_dbUserContext.Entry(user).State = EntityState.Modified;
+            //_dbUserContext.SaveChanges();
+            //return true;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Domain;
-using Persistence;
-using Persistence.Model;
+﻿using Persistence.Model;
 using Service.Interface;
 
 namespace Service.Services

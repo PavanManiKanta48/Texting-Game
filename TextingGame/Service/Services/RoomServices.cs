@@ -1,8 +1,9 @@
-﻿using Domain;
+﻿using Domain.UserModel;
+using Domain;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using Persistence.Model;
 using Service.Interface;
+using Domain.RoomModel;
 
 namespace Service.Services
 {
@@ -25,25 +26,53 @@ namespace Service.Services
         }
 
         //.........Check User Id Exist...........//
-        public bool CheckExistUserId(TblRoom room)
-
-        {
-            var room1 = _dbRoomContext.TblUsers.Where(x => x.UserId == room.RoomId).FirstOrDefault()!;
-            if (room1 != null)
-                return true;
-            else
-                return false;
-        }
-
+        //public bool CheckExistRoomName(TblRoom room)
+        //{
+        //    var room1 = _dbRoomContext.TblUsers.Where(x => x.UserId == room.RoomId).FirstOrDefault()!;
+        //    if (room1 != null)
+        //        return true;
+        //    else
+        //        return false;
+        //}
+       
         //...........Create Room..........//
-        public int CreateRoom(TblRoom room)
+        public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
         {
-            room.CreatedDate = DateTime.Now;
-            room.UpdatedDate = DateTime.Now;
-            room.IsActive = true;
+            
+            TblRoom room = new TblRoom()
+            {
+                RoomName = createRoomRequestModel.RoomName,
+                NumOfPeopele = createRoomRequestModel.NoOfPeoples,
+                IsActive = true,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now,
+                CreatedBy=2,
+                UpdatedBy=1
+            };
             _dbRoomContext.TblRooms.Add(room);
-            _dbRoomContext.SaveChanges();
-            return room.RoomId;
+            try
+            {
+                _dbRoomContext.SaveChanges();
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    SuccessMessage = "Room created successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                };
+            }
+            //room.CreatedDate = DateTime.Now;
+            //room.UpdatedDate = DateTime.Now;
+            //room.IsActive = true;
+            //_dbRoomContext.TblRooms.Add(room);
+            //_dbRoomContext.SaveChanges();
+            //return room.RoomId;
         }
 
         // .........Check Room Id Exist............//

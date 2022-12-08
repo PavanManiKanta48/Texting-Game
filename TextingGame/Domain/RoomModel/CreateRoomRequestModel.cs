@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.RoomModel
+﻿namespace Domain.RoomModel
 {
     public class CreateRoomRequestModel
     {
         public string RoomName { get; set; } = null!;
+        public int NoOfPeoples { get; set; }
     }
 }
