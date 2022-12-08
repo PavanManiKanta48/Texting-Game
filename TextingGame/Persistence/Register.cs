@@ -1,6 +1,4 @@
-﻿using Persistence.Model;
-
-namespace Domain
+﻿namespace Domain
 {
     public class Register
     {

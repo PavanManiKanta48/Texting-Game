@@ -1,5 +1,4 @@
-﻿using Domain;
-using Persistence.Model;
+﻿using Persistence.Model;
 using Service.Services;
 
 namespace XUnitTesting

@@ -1,7 +1,6 @@
 ﻿using Domain;
 using Domain.UserModel;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using Persistence.Model;
 using Service.Interface;
 
@@ -20,15 +19,15 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetUsers()
+        public List<ListUserRequestModel> GetUsers()
         {
             try
             {
-                return new JsonResult(_userService.GetUsers().ToList());
+                return _userService.GetUsers().ToList();
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
 
@@ -58,54 +57,32 @@ namespace API.Controllers
         }
 
         [HttpPost("LogIn")]
-        public JsonResult UserLogIn(UserLogin logIn)
+        public BaseResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel)
         {
-            CrudStatus crudStatus = new CrudStatus();
-            crudStatus.Status = false;
             try
             {
-                var result = _userService.UserLogIn(logIn);
-                if (result != null)
-                {
-                    crudStatus.Status = true;
-                    crudStatus.Message = result;
-                }
-                else
-                {
-                    crudStatus.Message = "Email and Password doesnt match";
-                }
-                return new JsonResult(crudStatus);
+                return _userService.UserLogIn(loginUserRequestModel);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                };
             }
         }
 
         [HttpPut("ForgetPassword")]
-        public JsonResult ForgetPassword(UserLogin changePwd)
+        public BaseResponseModel ForgetPassword(UserForgotPasswordRequestModel userForgotPasswordRequestModel)
         {
             try
             {
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
-                //check user exist or not
-                bool isUserExist = _userService.CheckUserExist(changePwd.EmailId!);
-                if (!isUserExist)
-                    crudStatus.Message = "Email doesn't registered. Please Sign up";
-                else if (changePwd.Password != changePwd.ConfirmPassword)
-                    crudStatus.Message = "Password and Confirm password not match";
-                else
-                {
-                    _userService.ForgetPassword(changePwd);
-                    crudStatus.Status = true;
-                    crudStatus.Message = "Password updated successfully";
-                }
-                return new JsonResult(crudStatus);
+                return _userService.ForgetPassword(userForgotPasswordRequestModel);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
     }

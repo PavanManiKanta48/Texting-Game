@@ -1,7 +1,7 @@
 ﻿using Domain;
+using Domain.RoomModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using Persistence.Model;
 using Service.Interface;
 
@@ -25,7 +25,7 @@ namespace API.Controllers
         }
 
         // GET: api/<RoomController>
-        [Authorize]
+       // [Authorize]
         [HttpGet]
         public JsonResult GetRoom()
         {
@@ -40,31 +40,17 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public JsonResult CreateRoom(TblRoom room)
+        public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
         {
             try
-            {
-
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
-                bool IsExistUserId = _roomServices.CheckExistUserId(room);
-                if (!IsExistUserId)
-                {
-                    crudStatus.Message = "User unable to Create room because id is not matched";
-                }
-                else
-                {
-
-                    int roomid = _roomServices.CreateRoom(room);
-                    crudStatus.Status = true;
-                    crudStatus.Message = "User Create room succesfully";
-                    crudStatus.Data = roomid.ToString();
-                }
-                return new JsonResult(crudStatus);
+            {         
+               
+               return _roomServices.CreateRoom(createRoomRequestModel);
+               
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
 
@@ -99,6 +85,7 @@ namespace API.Controllers
         {
             try
             {
+
                 return new JsonResult(_roomServices.SendSms(phone, message));
             }
             catch (Exception ex)

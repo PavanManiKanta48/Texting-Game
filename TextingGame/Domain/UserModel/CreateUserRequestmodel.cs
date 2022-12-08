@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.UserModel
+﻿namespace Domain.UserModel
 {
     public class CreateUserRequestmodel
     {
-        public string? UserName { get; set; }
+        public string? Name { get; set; }
 
         public string EmailId { get; set; } = null!;
 

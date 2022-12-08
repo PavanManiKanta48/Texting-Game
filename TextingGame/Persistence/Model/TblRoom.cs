@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Persistence.Model;
+﻿namespace Persistence.Model;
 
 public partial class TblRoom
 {

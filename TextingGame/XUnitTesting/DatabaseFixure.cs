@@ -1,6 +1,4 @@
-﻿using Domain;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
+﻿using Microsoft.EntityFrameworkCore;
 using Persistence.Model;
 
 namespace XUnitTesting
