@@ -6,8 +6,9 @@ namespace Service.Interface
 {
     public interface IRoomServices
     {
-        List<TblRoom> GetRoom();
-       // bool CheckExistUserId(TblRoom room);
+        List<RoomResponse> GetRoom(int userId);
+        BaseResponseModel ValidateUserRequestModel(CreateRoomRequestModel createRoomRequestModel);
+        bool CheckExistRoomName(string room);
         BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel);
         bool CheckExistRoomId(TblRoom room);
         bool UpdateRoom(TblRoom room);

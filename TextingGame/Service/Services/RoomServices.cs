@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Model;
 using Service.Interface;
 using Domain.RoomModel;
+using Domain.UserRoomModel;
 
 namespace Service.Services
 {
@@ -19,22 +20,47 @@ namespace Service.Services
         }
 
         //...........Fetch Data...........//
-        public List<TblRoom> GetRoom()
+        public List<RoomResponse> GetRoom(int userId)
         {
-            var users = _dbRoomContext.TblRooms.ToList();
-            return users;
+           List<RoomResponse> result = (from user in _dbRoomContext.TblRooms join
+                                                 joinusers in _dbRoomContext.TblUserRooms 
+                                                 on user.RoomId equals joinusers.RoomId select new RoomResponse                                                  
+                                                 {
+
+                                                     RoomId=user.RoomId,
+                                                     RoomName=user.RoomName
+                                                 }).ToList();
+            return result;
+            //var users = _dbRoomContext.TblRooms.ToList();
+            //return users;
+
         }
 
-        //.........Check User Id Exist...........//
-        //public bool CheckExistRoomName(TblRoom room)
-        //{
-        //    var room1 = _dbRoomContext.TblUsers.Where(x => x.UserId == room.RoomId).FirstOrDefault()!;
-        //    if (room1 != null)
-        //        return true;
-        //    else
-        //        return false;
-        //}
-       
+        //.........Check room Exist...........//
+        public BaseResponseModel ValidateUserRequestModel(CreateRoomRequestModel createRoomRequestModel)
+        {
+            if (CheckExistRoomName(createRoomRequestModel.RoomName))
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "Room Already Exists"
+                };
+            }            
+            return new BaseResponseModel()
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+            };
+        }
+        public bool CheckExistRoomName(string room)
+        {
+            var check = _dbRoomContext.TblRooms.Where(x => x.RoomName == room).FirstOrDefault()!;
+            if (check != null)
+                return true;
+            else
+                return false;
+        }
+
         //...........Create Room..........//
         public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
         {

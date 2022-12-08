@@ -1,9 +1,13 @@
 ﻿using Domain;
 using Domain.RoomModel;
+using Domain.UserModel;
+using Domain.UserRoomModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Model;
 using Service.Interface;
+using Service.Services;
+using Twilio.TwiML.Voice;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,15 +31,15 @@ namespace API.Controllers
         // GET: api/<RoomController>
        // [Authorize]
         [HttpGet]
-        public JsonResult GetRoom()
+        public List<RoomResponse> GetRoom(int userId)
         {
             try
             {
-                return new JsonResult(_roomServices.GetRoom().ToList());
+                return _roomServices.GetRoom(userId);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
 
@@ -43,9 +47,13 @@ namespace API.Controllers
         public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
         {
             try
-            {         
-               
-               return _roomServices.CreateRoom(createRoomRequestModel);
+            {
+                BaseResponseModel errorModel = _roomServices.ValidateUserRequestModel(createRoomRequestModel);
+                if (errorModel.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    return errorModel;
+                }
+                return _roomServices.CreateRoom(createRoomRequestModel);
                
             }
             catch (Exception ex)
