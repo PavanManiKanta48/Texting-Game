@@ -24,11 +24,12 @@ namespace Service.Services
         {
             List<RoomResponse> userRooms = (from userRoom in _dbRoomContext.TblUserRooms
                                             join users in _dbRoomContext.TblUsers on userRoom.UserId equals users.UserId
+                                            join rooms in _dbRoomContext.TblRooms on userRoom.RoomId equals rooms.RoomId
                                             where userRoom.UserId == userId
                                             select new RoomResponse()
                                             {
                                                 RoomId = userRoom.RoomId ?? 0,
-                                                RoomName = users.UserName
+                                                RoomName = rooms.RoomName
                                             }).ToList();
             if(userRooms.Any())
             {
