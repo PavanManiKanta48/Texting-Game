@@ -1,13 +1,8 @@
 ﻿using Domain;
 using Domain.RoomModel;
-using Domain.UserModel;
-using Domain.UserRoomModel;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Model;
 using Service.Interface;
-using Service.Services;
-using Twilio.TwiML.Voice;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,11 +31,7 @@ namespace API.Controllers
             try
             {
                 //Validation
-                if (userId == 0)
-                {
-                    return new List<RoomResponse>();
-                }
-                return _roomServices.GetRoom(userId);
+                return userId == 0 ? new List<RoomResponse>() : _roomServices.GetRoom(userId);
             }
             catch (Exception ex)
             {
@@ -68,28 +59,15 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public JsonResult UpdateRoom(TblRoom room)
+        public BaseResponseModel UpdateRoom(EditRoomRequestModel editRoomRequestModel)
         {
             try
             {
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
-                bool IsExistRoomId = _roomServices.CheckExistRoomId(room);
-                if (!IsExistRoomId)
-                {
-                    crudStatus.Message = "Room Id not matched";
-                }
-                else
-                {
-                    _roomServices.UpdateRoom(room);
-                    crudStatus.Status = true;
-                    crudStatus.Message = "User update room succesfully";
-                }
-                return new JsonResult(crudStatus);
+                return _roomServices.UpdateRoom(editRoomRequestModel);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
         //[Authorize]

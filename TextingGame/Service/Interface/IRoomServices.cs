@@ -1,5 +1,5 @@
-﻿using Domain.RoomModel;
-using Domain;
+﻿using Domain;
+using Domain.RoomModel;
 using Persistence.Model;
 
 namespace Service.Interface
@@ -11,7 +11,7 @@ namespace Service.Interface
         bool CheckExistRoomName(string room);
         BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel);
         bool CheckExistRoomId(TblRoom room);
-        bool UpdateRoom(TblRoom room);
+        BaseResponseModel UpdateRoom(EditRoomRequestModel editRoomRequestModel);
         string GenerateRoomCode(int Id);
         bool SendSms(double phone, string message);
     }

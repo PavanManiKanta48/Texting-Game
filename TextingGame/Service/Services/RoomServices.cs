@@ -1,10 +1,8 @@
-﻿using Domain.UserModel;
-using Domain;
+﻿using Domain;
+using Domain.RoomModel;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Model;
 using Service.Interface;
-using Domain.RoomModel;
-using Domain.UserRoomModel;
 
 namespace Service.Services
 {
@@ -31,7 +29,7 @@ namespace Service.Services
                                                 RoomId = userRoom.RoomId ?? 0,
                                                 RoomName = rooms.RoomName
                                             }).ToList();
-            if(userRooms.Any())
+            if (userRooms.Any())
             {
                 return userRooms;
             }
@@ -54,6 +52,7 @@ namespace Service.Services
                 StatusCode = System.Net.HttpStatusCode.OK,
             };
         }
+
         public bool CheckExistRoomName(string room)
         {
             var check = _dbRoomContext.TblRooms.Where(x => x.RoomName == room).FirstOrDefault()!;
@@ -95,12 +94,6 @@ namespace Service.Services
                     ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
                 };
             }
-            //room.CreatedDate = DateTime.Now;
-            //room.UpdatedDate = DateTime.Now;
-            //room.IsActive = true;
-            //_dbRoomContext.TblRooms.Add(room);
-            //_dbRoomContext.SaveChanges();
-            //return room.RoomId;
         }
 
         // .........Check Room Id Exist............//
@@ -112,16 +105,45 @@ namespace Service.Services
         }
 
         // ............Update Room.............//
-        public bool UpdateRoom(TblRoom room)
+        public BaseResponseModel UpdateRoom(EditRoomRequestModel editRoomRequestModel)
         {
-            TblRoom roomUpdate = _dbRoomContext.TblRooms.Where(x => x.RoomId == room.RoomId).FirstOrDefault()!;
-            roomUpdate.RoomName = room.RoomName;
-            roomUpdate.NumOfPeopele = room.NumOfPeopele;
-            roomUpdate.UpdatedDate = DateTime.Now;
-            roomUpdate.IsActive = true;
-            _dbRoomContext.Entry(roomUpdate).State = EntityState.Modified;
-            _dbRoomContext.SaveChanges();
-            return true;
+            try
+            {
+                TblRoom roomUpdate = _dbRoomContext.TblRooms.Where(x => x.RoomId == editRoomRequestModel.RoomId).FirstOrDefault()!;
+                if (roomUpdate != null)
+                {
+                    roomUpdate.RoomName = editRoomRequestModel.RoomName;
+                    roomUpdate.UpdatedDate = DateTime.Now;
+                    roomUpdate.CreatedDate = DateTime.Now;
+                    roomUpdate.CreatedBy = 1;
+                    roomUpdate.UpdatedBy = 3;
+                    roomUpdate.IsActive = true;
+                    _dbRoomContext.Entry(roomUpdate).State = EntityState.Modified;
+
+
+                    _dbRoomContext.SaveChanges();
+                    return new BaseResponseModel()
+                    {
+                        StatusCode = System.Net.HttpStatusCode.OK,
+                        SuccessMessage = "Room Updated successfully"
+                    };
+                }
+
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "RoomId Not Exist "
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                };
+            }
+
         }
         public string GenerateRoomCode(int Id)
         {
