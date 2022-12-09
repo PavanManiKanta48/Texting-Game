@@ -1,6 +1,4 @@
-﻿using Domain.UserModel;
-using Domain;
-using Persistence.Model;
+﻿using Domain;
 using Domain.UserRoomModel;
 
 namespace Service.Interface

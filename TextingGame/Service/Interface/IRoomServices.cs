@@ -13,6 +13,6 @@ namespace Service.Interface
         bool CheckExistRoomId(TblRoom room);
         BaseResponseModel UpdateRoom(EditRoomRequestModel editRoomRequestModel);
         string GenerateRoomCode(int Id);
-        bool SendSms(double phone, string message);
+        BaseResponseModel SendSms(double phone, string message);
     }
 }

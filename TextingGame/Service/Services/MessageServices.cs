@@ -1,4 +1,6 @@
-﻿using Persistence.Model;
+﻿using Domain;
+using Domain.Messagemodel;
+using Persistence.Model;
 using Service.Interface;
 
 namespace Service.Services
@@ -13,17 +15,29 @@ namespace Service.Services
         }
 
         //...........Get User Message...........//
-        public List<TblMessage> GetMessages(int RoomId)
+        public List<MessageResponse> GetRoom(int Roomid)
         {
-            var UserMessage = _dbMessageContext.TblMessages.Where(x => x.RoomId == RoomId).ToList();
-            return UserMessage;
-
+            List<MessageResponse> userRooms = (from msgRoom in _dbMessageContext.TblMessages
+                                               join users in _dbMessageContext.TblUsers on msgRoom.UserId equals users.UserId
+                                               join rooms in _dbMessageContext.TblRooms on msgRoom.RoomId equals rooms.RoomId
+                                               where msgRoom.RoomId == Roomid
+                                               select new MessageResponse()
+                                               {
+                                                   Timestamp = msgRoom.CreatedDate,
+                                                   FirstName = users.UserName,
+                                                   Message = msgRoom.Message
+                                               }).ToList();
+            if (userRooms.Any())
+            {
+                return userRooms;
+            }
+            return new List<MessageResponse>();
         }
 
         //............Check User Id................//
-        public bool CheckUserId(TblMessage message)
+        public bool CheckUserId(int userId)
         {
-            var checkMessageUserId = _dbMessageContext.TblUsers.Where(r => r.UserId == message.UserId).FirstOrDefault();
+            var checkMessageUserId = _dbMessageContext.TblUsers.Where(r => r.UserId == userId).FirstOrDefault();
             if (checkMessageUserId != null)
                 return true;
             else
@@ -31,9 +45,10 @@ namespace Service.Services
         }
 
         //............Check Room Id ..................//
-        public bool CheckRoomId(TblMessage message)
+
+        public bool CheckRoomId(int roomId)
         {
-            var checkMessageRoomId = _dbMessageContext.TblRooms.Where(r => r.RoomId == message.RoomId).FirstOrDefault();
+            var checkMessageRoomId = _dbMessageContext.TblRooms.Where(r => r.RoomId == roomId).FirstOrDefault();
             if (checkMessageRoomId != null)
                 return true;
             else
@@ -41,18 +56,37 @@ namespace Service.Services
         }
 
         //..................User Add Message...................//
-        public bool AddMessages(string Message, int RoomID, int UserId)
+        public BaseResponseModel AddMessages(int RoomID, string Message, int UserId)
         {
-            TblMessage message = new TblMessage();
-            message.Message = Message;
-            message.RoomId = RoomID;
-            message.UserId = UserId;
-            message.CreatedDate = DateTime.Now;
-            message.UpdatedDate = DateTime.Now;
-            message.IsActive = true;
+            TblMessage message = new TblMessage()
+            {
+                Message = Message,
+                UserId = UserId,
+                RoomId = RoomID,
+                CreatedDate = DateTime.Now,
+                CreatedBy = 2,
+                UpdatedBy = 2,
+                UpdatedDate = DateTime.Now,
+                IsActive = true
+            };
             _dbMessageContext.TblMessages.Add(message);
-            _dbMessageContext.SaveChanges();
-            return true;
+            try
+            {
+                _dbMessageContext.SaveChanges();
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    SuccessMessage = "Message send successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Sending Message to user failed. Exception details are: {0}", ex.Message)
+                };
+            }
         }
     }
 }

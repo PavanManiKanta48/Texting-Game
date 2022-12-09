@@ -72,16 +72,15 @@ namespace API.Controllers
         }
         //[Authorize]
         [HttpPost("send message")]
-        public JsonResult SendingSms(double phone, string message) //int roomid
+        public BaseResponseModel SendingSms(double phone, string message)
         {
             try
             {
-
-                return new JsonResult(_roomServices.SendSms(phone, message));
+                return _roomServices.SendSms(phone, message);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
     }
