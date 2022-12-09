@@ -1,7 +1,9 @@
 ﻿namespace Domain.GuessUser
 {
-    public class ListOfResultResponse : BaseResponseModel
+    public class ListOfResultResponse 
     {
-        public List<ListOfResultResponse> listOfResultResponses { get; set; }
+        public int ? RoomId { get; set; }
+        public string ? UserName { get; set; }
+        public double Guess { get; set; }
     }
 }

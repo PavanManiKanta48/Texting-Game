@@ -1,7 +1,10 @@
 ﻿using Domain;
+using Domain.RoomModel;
+using Domain.UserRoomModel;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Model;
 using Service.Interface;
+using Service.Services;
 
 namespace API.Controllers
 {
@@ -19,85 +22,54 @@ namespace API.Controllers
         }
 
         [HttpGet("GetUsersRoom")]
-        public JsonResult GetUsersRoom()
+        public List<ListUserRoomResponse> GetUsersRoom(int roomId)
         {
             try
             {
-                return new JsonResult(_userRoomServices.GetUsersRoom().ToList());
+                //Validation
+                return roomId == 0 ? new List<ListUserRoomResponse>() : _userRoomServices.GetUsersRoom(roomId);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
 
         [HttpPost("AddUserToRoom")]
-        public JsonResult AddUserToRoom(TblUserRoom addUser)
+        public BaseResponseModel ValidateUserRequestModel(CreateUserRoomRequestModel createUserRoomRequestModel)
         {
             try
             {
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
-                bool IsExistUserId = _userRoomServices.CheckUserId(addUser);
-                if (IsExistUserId)
+                BaseResponseModel errorModel = _userRoomServices.ValidateUserRequestModel(createUserRoomRequestModel);
+                if (errorModel.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    bool IsExistroomId = _userRoomServices.CheckRoomId(addUser);
-                    if (IsExistroomId)
-                    {
-                        bool userinroom = _userRoomServices.AddUserToRoom(addUser);
-                        if (userinroom)
-                        {
-                            crudStatus.Status = true;
-                            crudStatus.Message = "room added successfully";
-                        }
-                        else
-                        {
-                            crudStatus.Status = false;
-                            crudStatus.Message = "Its Out Of limit";
-                        }
-                    }
-                    else
-                    {
-                        crudStatus.Status = false;
-                        crudStatus.Message = "room id is not exist";
-                    }
+                    return errorModel;
                 }
-                else
-                {
-                    crudStatus.Status = false;
-                    crudStatus.Message = "User ID is not matched";
-                }
-                return new JsonResult(crudStatus);
+                return _userRoomServices.AddUserToRoom(createUserRoomRequestModel);
+
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
 
         [HttpDelete]
-        public JsonResult DeleteUserFromRoom(TblUserRoom deleteUserRoom)
+        public BaseResponseModel ValidateUserRequestModel(DeleteRoomRequsetModel deleteRoomRequsetModel)
         {
             try
             {
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
-                bool isExistUserRoomId = _userRoomServices.CheckRoomId(deleteUserRoom);
-                if (isExistUserRoomId)
+                BaseResponseModel errorModel = _userRoomServices.ValidateUserRequestModel(deleteRoomRequsetModel);
+                if (errorModel.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    _userRoomServices.DeleteUserFromRoom(deleteUserRoom);
-                    crudStatus.Status = true;
-                    crudStatus.Message = "person is succesfully deleted";
+                    return errorModel;
                 }
-                else
-                {
-                    crudStatus.Message = "Id is not matched person is not Deleted";
-                }
-                return new JsonResult(crudStatus);
+                return _userRoomServices.DeleteUserFromRoom(deleteRoomRequsetModel);
+
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
     }

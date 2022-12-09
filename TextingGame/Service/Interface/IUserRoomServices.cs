@@ -1,14 +1,19 @@
-﻿using Persistence.Model;
+﻿using Domain.UserModel;
+using Domain;
+using Persistence.Model;
+using Domain.UserRoomModel;
 
 namespace Service.Interface
 {
     public interface IUserRoomServices
     {
-        List<TblUserRoom> GetUsersRoom();
-        bool AddUserToRoom(TblUserRoom addUser);
-        bool CheckUserId(TblUserRoom checkuser);
-        bool CheckRoomId(TblUserRoom checkRoom);
-        bool CheckPersonId(TblUserRoom userRoom);
-        bool DeleteUserFromRoom(TblUserRoom deleteUserRoom);
+        List<ListUserRoomResponse> GetUsersRoom(int roomId);
+        //bool AddUserToRoom(TblUserRoom addUser);
+        bool CheckUserId(int[]? checkUser);
+        bool CheckRoomId(int? checkroom);
+        BaseResponseModel DeleteUserFromRoom(DeleteRoomRequsetModel deleteRoomRequsetModel);
+        BaseResponseModel ValidateUserRequestModel(DeleteRoomRequsetModel deleteRoomRequsetModel);
+        BaseResponseModel ValidateUserRequestModel(CreateUserRoomRequestModel createUserRoomRequestModel);
+        BaseResponseModel AddUserToRoom(CreateUserRoomRequestModel createUserRoomRequestModel);
     }
 }
