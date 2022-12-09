@@ -1,10 +1,8 @@
 ﻿using Domain;
-using Domain.RoomModel;
 using Domain.UserRoomModel;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Model;
 using Service.Interface;
-using Service.Services;
 
 namespace API.Controllers
 {

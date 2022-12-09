@@ -152,10 +152,25 @@ namespace Service.Services
         }
 
         //..............Sending Sms.............//
-        public bool SendSms(double phone, string message)
+        public BaseResponseModel SendSms(double phone, string message)
         {
-            sms.SendMessage(phone, message);
-            return true;
+            try
+            {
+                sms.SendMessage(phone, message);
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    SuccessMessage = "Message send successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = string.Format("Sending sms to user failed. Exception details are: {0}", ex.Message)
+                };
+            }
         }
     }
 }

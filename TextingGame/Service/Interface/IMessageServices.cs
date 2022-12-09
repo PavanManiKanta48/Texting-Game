@@ -1,12 +1,13 @@
-﻿using Persistence.Model;
+﻿using Domain;
+using Domain.Messagemodel;
 
 namespace Service.Interface
 {
     public interface IMessageServices
     {
-        List<TblMessage> GetMessages(int RoomId);
-        bool CheckUserId(TblMessage message);
-        bool CheckRoomId(TblMessage message);
-        bool AddMessages(string Message, int RoomId, int UserId);
+        List<MessageResponse> GetRoom(int Roomid);
+        bool CheckUserId(int userId);
+        bool CheckRoomId(int roomId);
+        BaseResponseModel AddMessages(int RoomID, string Message, int UserId);
     }
 }

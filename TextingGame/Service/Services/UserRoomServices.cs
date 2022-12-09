@@ -1,11 +1,7 @@
 ﻿using Domain;
-using Domain.RoomModel;
-using Domain.UserModel;
 using Domain.UserRoomModel;
 using Persistence.Model;
 using Service.Interface;
-using System.Security.Cryptography.X509Certificates;
-using Twilio.TwiML.Voice;
 
 namespace Service.Services
 {
@@ -22,15 +18,15 @@ namespace Service.Services
         public List<ListUserRoomResponse> GetUsersRoom(int roomId)
         {
             List<ListUserRoomResponse> userRooms = (from userRoom in _dbUserRoomContext.TblUserRooms
-                                            join users in _dbUserRoomContext.TblUsers on userRoom.UserId equals users.UserId
-                                            join rooms in _dbUserRoomContext.TblRooms on userRoom.RoomId equals rooms.RoomId
-                                            where userRoom.RoomId == roomId
-                                            select new ListUserRoomResponse()
-                                            {
-                                                RoomId = userRoom.RoomId,
-                                               UserId = users.UserId,
-                                                
-                                            }).ToList();
+                                                    join users in _dbUserRoomContext.TblUsers on userRoom.UserId equals users.UserId
+                                                    join rooms in _dbUserRoomContext.TblRooms on userRoom.RoomId equals rooms.RoomId
+                                                    where userRoom.RoomId == roomId
+                                                    select new ListUserRoomResponse()
+                                                    {
+                                                        RoomId = userRoom.RoomId,
+                                                        UserId = users.UserId,
+
+                                                    }).ToList();
             if (userRooms.Any())
             {
                 return userRooms;
@@ -45,22 +41,22 @@ namespace Service.Services
         //    return room;
         //}
 
-        public bool CheckUserId(int[] ? checkUser)
+        public bool CheckUserId(int[]? checkUser)
         {
-            foreach(var user in checkUser! )
+            foreach (var user in checkUser!)
             {
                 var checkMessageUserId = _dbUserRoomContext.TblUsers.Where(r => r.UserId == user).FirstOrDefault();
                 if (checkMessageUserId == null)
                     //return true;
-                //else
+                    //else
                     return false;
             }
             return true;
-            
+
         }
 
         //............Check Room Id ..................//
-        public bool CheckRoomId(int ? checkroom)
+        public bool CheckRoomId(int? checkroom)
         {
             var checkMessageRoomId = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == checkroom).FirstOrDefault();
             if (checkMessageRoomId != null)
@@ -81,21 +77,21 @@ namespace Service.Services
                     };
                 }
             }
-                return new BaseResponseModel()
+            return new BaseResponseModel()
             {
-                    StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    ErrorMessage = "user id and room id is not matched"
-                };
+                StatusCode = System.Net.HttpStatusCode.BadRequest,
+                ErrorMessage = "user id and room id is not matched"
+            };
         }
         //..........Add User Room...................//
         public BaseResponseModel AddUserToRoom(CreateUserRoomRequestModel createUserRoomRequestModel)
         {
             TblRoom room = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == createUserRoomRequestModel.RoomId).FirstOrDefault()!;
             List<TblUserRoom> userRooms = _dbUserRoomContext.TblUserRooms.Where(r => r.RoomId == createUserRoomRequestModel.RoomId).ToList()!;
-            List<TblUserRoom> room1=new List<TblUserRoom>();
+            List<TblUserRoom> room1 = new List<TblUserRoom>();
             foreach (var userId in createUserRoomRequestModel.UserId!)
             {
-                room1.Add( new TblUserRoom
+                room1.Add(new TblUserRoom
                 {
                     RoomId = createUserRoomRequestModel.RoomId,
                     UserId = userId,
@@ -108,20 +104,21 @@ namespace Service.Services
                     UpdatedBy = 1
                 });
             }
-            
+
             try
             {
                 if (userRooms.Count <= room.NumOfPeopele)
                 {
                     _dbUserRoomContext.TblUserRooms.AddRange(room1);
-                _dbUserRoomContext.SaveChanges();
-                return new BaseResponseModel()
+                    _dbUserRoomContext.SaveChanges();
+                    return new BaseResponseModel()
+                    {
+                        StatusCode = System.Net.HttpStatusCode.OK,
+                        SuccessMessage = "user Room created successfully"
+                    };
+                }
+                else
                 {
-                    StatusCode = System.Net.HttpStatusCode.OK,
-                    SuccessMessage = "user Room created successfully"
-                };
-            }
-                else {
                     return new BaseResponseModel()
                     {
                         StatusCode = System.Net.HttpStatusCode.BadRequest,
@@ -138,7 +135,7 @@ namespace Service.Services
                 };
             }
         }
-public BaseResponseModel ValidateUserRequestModel(DeleteRoomRequsetModel deleteRoomRequsetModel)
+        public BaseResponseModel ValidateUserRequestModel(DeleteRoomRequsetModel deleteRoomRequsetModel)
         {
             if (CheckUserId(deleteRoomRequsetModel.UserId))
             {
@@ -158,9 +155,9 @@ public BaseResponseModel ValidateUserRequestModel(DeleteRoomRequsetModel deleteR
             };
         }
 
-                //................Delete User Room................//
-                public BaseResponseModel DeleteUserFromRoom(DeleteRoomRequsetModel deleteRoomRequsetModel)
-           {
+        //................Delete User Room................//
+        public BaseResponseModel DeleteUserFromRoom(DeleteRoomRequsetModel deleteRoomRequsetModel)
+        {
             //var user = _dbUserRoomContext.TblUserRooms.Where(x => x.UserId == deleteRoomRequsetModel.UserId[] && x.RoomId== deleteRoomRequsetModel.RoomId);
             List<TblUserRoom> users = new List<TblUserRoom>();
 
@@ -168,7 +165,7 @@ public BaseResponseModel ValidateUserRequestModel(DeleteRoomRequsetModel deleteR
             {
                 users.Add(_dbUserRoomContext.TblUserRooms.Where(x => x.UserId == userId && x.RoomId == deleteRoomRequsetModel.RoomId).FirstOrDefault()!);
             }
-            _dbUserRoomContext.TblUserRooms.RemoveRange(users);            
+            _dbUserRoomContext.TblUserRooms.RemoveRange(users);
             try
             {
                 _dbUserRoomContext.SaveChanges();

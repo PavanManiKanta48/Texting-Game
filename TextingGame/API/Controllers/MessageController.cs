@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Messagemodel;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Model;
 using Service.Interface;
@@ -19,59 +20,43 @@ namespace API.Controllers
         }
 
         [HttpGet("GetUserMessage")]
-        public JsonResult GetUsersMessage(int RoomId)
+        public List<MessageResponse> GetUsersMessage(int RoomId)
         {
             try
             {
-
-                return new JsonResult(_messageServices.GetMessages(RoomId).ToList());
+                //Validation
+                return RoomId == 0 ? new List<MessageResponse>() : _messageServices.GetRoom(RoomId);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
+
 
         [HttpPost("AddUserMessage")]
-        public JsonResult AddUserMessage(string Message, int RoomId, int UserId)
+        public BaseResponseModel AddingMessage(int RoomId, string Message, int UserId)
         {
             try
             {
-                TblMessage message = new TblMessage();
+                var CheckRoom = _messageServices.CheckRoomId(RoomId);
+                var CheckUser = _messageServices.CheckUserId(UserId);
+                if (CheckRoom == false || CheckUser == false)
                 {
-                    message.RoomId = RoomId;
-                    message.UserId = UserId;
-                    message.Message = Message;
-                };
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
-                bool IsExistUserId = _messageServices.CheckUserId(message);
-                if (IsExistUserId)
-                {
-                    bool IsExistroomId = _messageServices.CheckRoomId(message);
-                    if (IsExistroomId)
+                    return new BaseResponseModel()
                     {
-                        _messageServices.AddMessages(Message, RoomId, UserId);
-                        crudStatus.Status = true;
-                        crudStatus.Message = "message sent succesfull";
-                    }
-                    else
-                    {
-                        crudStatus.Status = false;
-                        crudStatus.Message = "room id is not exist";
-                    }
+                        StatusCode = System.Net.HttpStatusCode.OK,
+                        SuccessMessage = "RoomId Not Matched"
+                    };
                 }
-                else
-                {
-                    crudStatus.Status = false;
-                    crudStatus.Message = "User ID is not matched";
-                }
-                return new JsonResult(crudStatus);
+                return _messageServices.AddMessages(RoomId, Message, UserId);
+
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
+
     }
 }
