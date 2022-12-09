@@ -2,6 +2,6 @@
 {
     public class CreateMessageResponse : BaseResponseModel
     {
-        public CreateUserRoomRequestModel createUserRoomResponse { get; set; }
+        public CreateMessageRequestModel createUserRoomResponse { get; set; }
     }
 }
