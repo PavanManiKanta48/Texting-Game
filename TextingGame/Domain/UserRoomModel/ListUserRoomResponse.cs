@@ -1,7 +1,8 @@
 ﻿namespace Domain.UserRoomModel
 {
-    public class ListUserRoomResponse : BaseResponseModel
+    public class ListUserRoomResponse 
     {
-        public List<ListUserRoomRequestModel> listUserRoomRequestModels { get; set; }
+        public int? RoomId { get; set; }
+        public int? UserId { get; set; }
     }
 }
