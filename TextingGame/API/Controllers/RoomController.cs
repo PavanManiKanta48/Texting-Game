@@ -1,6 +1,5 @@
 ﻿using Domain;
 using Domain.RoomModel;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Model;
 using Service.Interface;
@@ -25,17 +24,18 @@ namespace API.Controllers
         }
 
         // GET: api/<RoomController>
-       // [Authorize]
+        // [Authorize]
         [HttpGet]
-        public JsonResult GetRoom()
+        public List<RoomResponse> GetRoom(int userId)
         {
             try
             {
-                return new JsonResult(_roomServices.GetRoom().ToList());
+                //Validation
+                return userId == 0 ? new List<RoomResponse>() : _roomServices.GetRoom(userId);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
 
@@ -43,10 +43,14 @@ namespace API.Controllers
         public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
         {
             try
-            {         
-               
-               return _roomServices.CreateRoom(createRoomRequestModel);
-               
+            {
+                BaseResponseModel errorModel = _roomServices.ValidateUserRequestModel(createRoomRequestModel);
+                if (errorModel.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    return errorModel;
+                }
+                return _roomServices.CreateRoom(createRoomRequestModel);
+
             }
             catch (Exception ex)
             {
@@ -55,28 +59,15 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public JsonResult UpdateRoom(TblRoom room)
+        public BaseResponseModel UpdateRoom(EditRoomRequestModel editRoomRequestModel)
         {
             try
             {
-                CrudStatus crudStatus = new CrudStatus();
-                crudStatus.Status = false;
-                bool IsExistRoomId = _roomServices.CheckExistRoomId(room);
-                if (!IsExistRoomId)
-                {
-                    crudStatus.Message = "Room Id not matched";
-                }
-                else
-                {
-                    _roomServices.UpdateRoom(room);
-                    crudStatus.Status = true;
-                    crudStatus.Message = "User update room succesfully";
-                }
-                return new JsonResult(crudStatus);
+                return _roomServices.UpdateRoom(editRoomRequestModel);
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex.Message);
+                throw new(ex.Message);
             }
         }
         //[Authorize]

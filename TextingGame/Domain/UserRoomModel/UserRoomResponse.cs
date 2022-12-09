@@ -1,6 +1,6 @@
-﻿namespace Domain.RoomModel
+﻿namespace Domain.UserRoomModel
 {
-    public class EditRoomRequestModel
+    public class UserRoomResponse : BaseResponseModel
     {
         public int RoomId { get; set; }
 

@@ -49,10 +49,7 @@ namespace XUnitTesting
                 EmailId = "anshika@gmail.com",
                 Password = "anshi12",
                 MobileNo = "7867765564",
-                ConfirmPassword = "anshi12",
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                IsActive = true
+                ConfirmPassword = "anshi12"
             };
 
             //Act
@@ -73,10 +70,7 @@ namespace XUnitTesting
                 UserName = "shirien",
                 EmailId = "shirien@gmail.com",
                 Password = "shirien12",
-                ConfirmPassword = "shirien12",
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                IsActive = true
+                ConfirmPassword = "shirien12"
             };
 
             //Act
@@ -96,10 +90,7 @@ namespace XUnitTesting
                 UserName = "pavan",
                 EmailId = "pavan@gmail.com",
                 Password = "pavan12",
-                ConfirmPassword = "pavan12",
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                IsActive = true
+                ConfirmPassword = "pavan12"
             };
 
             //Act
@@ -119,10 +110,7 @@ namespace XUnitTesting
                 UserName = "Anshika",
                 EmailId = "anshika@gmail.com",
                 Password = "anshi12",
-                ConfirmPassword = "4321",
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                IsActive = true
+                ConfirmPassword = "4321"
             };
 
             //Act
