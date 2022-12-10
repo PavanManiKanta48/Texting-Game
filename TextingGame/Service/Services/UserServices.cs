@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.RoomModel;
 using Domain.UserModel;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Model;
@@ -31,7 +32,11 @@ namespace Service.Services
                                                  }).ToList();
 
 
-            return result;
+            if (result.Any())
+            {
+                return result;
+            }
+            return new List<ListUserRequestModel>();
         }
 
         //............Check User Email...........// 
@@ -133,7 +138,7 @@ namespace Service.Services
                 return new BaseResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                    ErrorMessage = string.Format("Login user failed. Exception details are: {0}", ex.Message)
                 };
             }
 
@@ -173,10 +178,7 @@ namespace Service.Services
                     ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
                 };
             }
-            //user.Password = encryptPassword;
-            //_dbUserContext.Entry(user).State = EntityState.Modified;
-            //_dbUserContext.SaveChanges();
-            //return true;
+            
         }
     }
 }
