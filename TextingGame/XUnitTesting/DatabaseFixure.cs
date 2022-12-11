@@ -5,7 +5,7 @@ namespace XUnitTesting
 {
     public class DatabaseFixure : IDisposable
     {
-        private readonly DbContextOptions<DbTextingGameContext> dbContextOptions = new DbContextOptionsBuilder<DbTextingGameContext>()
+        private static DbContextOptions<DbTextingGameContext> dbContextOptions = new DbContextOptionsBuilder<DbTextingGameContext>()
        .UseInMemoryDatabase(databaseName: "db_TextingGame")
         .Options;
         public DbTextingGameContext _context;
@@ -20,14 +20,14 @@ namespace XUnitTesting
         {
             var user = new List<TblUser>()
             {
-                new TblUser(){UserId = 1,UserName = "Anshika",EmailId = "anshika@gmail.com",Password = "anshi12",MobileNo = "7867765564",CreatedDate = DateTime.Now,UpdatedDate = DateTime.Now,IsActive = true},
-                new TblUser(){UserId = 2,UserName = "Pavan",EmailId = "pavan@gmail.com",Password = "pavan12",MobileNo = "6523776845",CreatedDate = DateTime.Now,UpdatedDate = DateTime.Now,IsActive = true}
+                new TblUser(){UserId = 1,UserName = "Anshika",EmailId = "anshika@gmail.com",Password = "anshi12",MobileNo = "7867765564"},
+                new TblUser(){UserId = 2,UserName = "Pavan",EmailId = "pavan@gmail.com",Password = "pavan12",MobileNo = "6523776845"}
             };
             _context.TblUsers.AddRange(user);
             _context.SaveChanges();
             var user1 = new List<TblRoom>()
             {
-                new TblRoom(){RoomId = 1,RoomName = "FunGame",NumOfPeopele = 8,CreatedDate = DateTime.Now,UpdatedDate = DateTime.Now,IsActive = true},
+                new TblRoom(){RoomId = 1,RoomName = "FunGame",NumOfPeopele = 8,CreatedDate = DateTime.Now,UpdatedDate = DateTime.Now,IsActive = true,CreatedBy = 2,UpdatedBy = 1},
                 new TblRoom(){RoomId = 2,RoomName = "TextGame",NumOfPeopele = 10,CreatedDate = DateTime.Now,UpdatedDate= DateTime.Now,IsActive = true}
             };
             _context.TblRooms.AddRange(user1);
@@ -38,6 +38,13 @@ namespace XUnitTesting
                 new TblUserRoom(){UserRoomId=2,UserId=2,RoomId=2,CreatedDate=DateTime.Now,UpdatedDate=DateTime.Now,IsActive = true}
             };
             _context.TblUserRooms.AddRange(user2);
+            _context.SaveChanges();
+            var message = new List<TblMessage>()
+            {
+                new TblMessage(){MessageId = 1,RoomId = 2,UserId = 2, Message = "Hyy"},
+                 new TblMessage(){MessageId = 2,RoomId = 1,UserId = 2, Message = "Hello"}
+            };
+            _context.TblMessages.AddRange(message);
             _context.SaveChanges();
         }
         public void Dispose()
