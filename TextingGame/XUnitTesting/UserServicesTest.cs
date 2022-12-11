@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.UserModel;
 using Moq;
 using Persistence.Model;
 using Service.Interface;
@@ -6,6 +7,11 @@ using Service.Services;
 
 namespace XUnitTesting
 {
+    [CollectionDefinition("DataBase Collection")]
+    public class DatabaseCollection1 : ICollectionFixture<DatabaseFixure>
+    {
+    }
+
     [Collection("DataBase Collection")]
     public class UserServicesTest
     {
@@ -19,21 +25,16 @@ namespace XUnitTesting
             _fixure = fixure;
             _encrypt = new Mock<IEncryptServices>();
             _genratetoken = new Mock<IGenrateToken>();
-            //_configuration = new ConfigurationBuilder()
-            //   .SetBasePath(Directory.GetCurrentDirectory())
-            //   .AddJsonFile(@"appsettings.json", false, false)
-            //   .AddEnvironmentVariables()
-            //    .Build();
             _services = new UserServices(_fixure._context, _encrypt.Object, _genratetoken.Object);
         }
 
-        //.........Get all User..........//
+       // .........Get all User..........//
         [Fact]
         public void GetAll_Test()
         {
             var result = _services.GetUsers();
             //Act
-            var items = Assert.IsType<List<TblUser>>(result);
+            var items = Assert.IsType<List<ListUserRequestModel>>(result);
             //Assert
             Assert.Equal(2, items.Count);
         }
@@ -43,41 +44,45 @@ namespace XUnitTesting
         public void Check_Extist_with_CheckExtistUser()
         {
             //Arrange
-            var user = new Register()
+            var user = new CreateUserRequestmodel()
             {
-                UserName = "Anshika",
+                Name = "Anshika",
                 EmailId = "anshika@gmail.com",
                 Password = "anshi12",
-                MobileNo = "7867765564",
-                ConfirmPassword = "anshi12"
+                MobileNo = "7867765564"
             };
+           // _encrypt.Setup(x=>x.EncodePasswordToBase64(user.Password)).Returns(user.Password);
 
             //Act
-            var result = _services.Register(user);
-            var excepted = "succesfully registered";
+            var result = _services.CheckUserExist(user.EmailId);
 
             //Assert
-            Assert.Equal(result, excepted);
+            Assert.True(result);
         }
+
 
         //..............check new user..............//
         [Fact]
         public void Check_New_with_CheckExtistUser()
         {
             //Arrange
-            var user = new Register()
+            var user = new CreateUserRequestmodel()
             {
-                UserName = "shirien",
+                Name = "shirien",
                 EmailId = "shirien@gmail.com",
                 Password = "shirien12",
-                ConfirmPassword = "shirien12"
+                MobileNo = "7656983422",
             };
 
             //Act
             var result = _services.Register(user);
-
+            BaseResponseModel excepted = new BaseResponseModel
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                SuccessMessage = "User created successfully"
+            };
             //Assert
-            Assert.Null(result);
+            Assert.Equal(result.SuccessMessage,excepted.SuccessMessage);
         }
 
         //.................check confirm password..........//
@@ -85,19 +90,17 @@ namespace XUnitTesting
         public void Check_Correct_ConfirmPassword()
         {
             //Arrange
-            var user = new Register()
+            var user = new CreateUserRequestmodel()
             {
-                UserName = "pavan",
+                Name = "pavan",
                 EmailId = "pavan@gmail.com",
                 Password = "pavan12",
                 ConfirmPassword = "pavan12"
             };
 
             //Act
-            var result = _services.Register(user);
-
-            //Assert
-            Assert.Null(result);
+            var result = _services.CheckUserExist(user.EmailId);
+            Assert.True(result);
         }
 
         //..............check wrong confirm password..........//
@@ -105,19 +108,17 @@ namespace XUnitTesting
         public void Check_Wrong_ConfirmPassword()
         {
             //Arrange
-            var user = new Register()
+            var user = new CreateUserRequestmodel()
             {
-                UserName = "Anshika",
+                Name = "Anshika",
                 EmailId = "anshika@gmail.com",
                 Password = "anshi12",
                 ConfirmPassword = "4321"
             };
-
+            _encrypt.Setup(method => method.EncodePasswordToBase64(user.Password)).Returns(user.Password);
             //Act
-            var result = _services.Register(user);
-
-            //Assert
-            Assert.Null(result);
+            var result = _services.CheckUserExist(user.EmailId);
+            Assert.False(result);
         }
 
         //..........login with correct mail and password.........//
@@ -125,17 +126,22 @@ namespace XUnitTesting
         public void LogIn_with_correct_mail_password()
         {
             //Arrange
-            var login = new UserLogin()
+            var login = new LoginUserRequestModel()
             {
                 EmailId = "anshika@gmail.com",
                 Password = "anshi12",
-                ConfirmPassword = "anshi12"
             };
             _encrypt.Setup(method => method.EncodePasswordToBase64(login.Password)).Returns(login.Password);
             //Act
-            string result = _services.UserLogIn(login);
+
+            var result = _services.UserLogIn(login);
+            BaseResponseModel excepted = new BaseResponseModel
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                SuccessMessage = "User Login SuccessFully"
+            };
             //Assert
-            Assert.Null(result);
+            Assert.Equal(result.SuccessMessage, excepted.SuccessMessage);
         }
 
         //.................check login with correct mail and wrong password..........//
@@ -143,19 +149,22 @@ namespace XUnitTesting
         public void LogIn_with_correct_mail_wrong_password()
         {
             //Arrange
-            var user = new UserLogin()
+            var login = new LoginUserRequestModel()
             {
                 EmailId = "anshika@gmail.com",
                 Password = "an1234",
-                ConfirmPassword = "an1234"
             };
-            _encrypt.Setup(method => method.EncodePasswordToBase64(user.Password)).Returns(user.Password);
+            _encrypt.Setup(method => method.EncodePasswordToBase64(login.Password)).Returns(login.Password);
 
             //Act
-            string result = _services.UserLogIn(user);
-
+            var result = _services.UserLogIn(login);
+            BaseResponseModel excepted = new BaseResponseModel
+            {
+                     StatusCode = System.Net.HttpStatusCode.BadRequest,
+                     ErrorMessage = "Invalid User"
+        };
             //Assert
-            Assert.Null(result);
+            Assert.Equal(result.ErrorMessage, excepted.ErrorMessage);
         }
 
         //.............check login with new mail...............//
@@ -163,19 +172,22 @@ namespace XUnitTesting
         public void LogIn_with_new_mail()
         {
             //Arrange
-            var user = new UserLogin()
+            var login = new LoginUserRequestModel()
             {
                 EmailId = "pavan12@gmail.com",
                 Password = "pava123",
-                ConfirmPassword = "pava123"
             };
-            _encrypt.Setup(method => method.EncodePasswordToBase64(user.Password)).Returns(user.Password);
+            _encrypt.Setup(method => method.EncodePasswordToBase64(login.Password)).Returns(login.Password);
 
-            //Act
-            string result = _services.UserLogIn(user);
-
+            var result = _services.UserLogIn(login);
+            BaseResponseModel excepted = new BaseResponseModel
+            {
+                 StatusCode = System.Net.HttpStatusCode.BadRequest,
+                     ErrorMessage = "Invalid User"
+                
+        };
             //Assert
-            Assert.Null(result);
+            Assert.Equal(result.ErrorMessage, excepted.ErrorMessage);
         }
 
         //..................check forgot password..............//
@@ -183,19 +195,22 @@ namespace XUnitTesting
         public void Forget_Password_Test()
         {
             //Arrange
-            var user = new UserLogin()
+            var pwd = new UserForgotPasswordRequestModel()
             {
                 EmailId = "anshika@gmail.com",
                 Password = "an123",
-                ConfirmPassword = "an123"
             };
-            _encrypt.Setup(method => method.EncodePasswordToBase64(user.Password)).Returns(user.Password);
+            _encrypt.Setup(method => method.EncodePasswordToBase64(pwd.Password)).Returns(pwd.Password);
 
             //Act
-            var result = _services.ForgetPassword(user);
-
+            var result = _services.ForgetPassword(pwd);
+            BaseResponseModel excepted = new BaseResponseModel
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                SuccessMessage = "Password reset  Successfully"
+            };
             //Assert
-            Assert.True(result);
+            Assert.Equal(result.SuccessMessage, excepted.SuccessMessage);
         }
     }
 }
