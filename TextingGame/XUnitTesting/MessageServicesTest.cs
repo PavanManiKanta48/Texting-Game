@@ -11,43 +11,64 @@ using Xunit;
 
 namespace XUnitTesting
 {
-        [Collection("DataBase Collection")]
-        public class MessageServicesTest
+    [Collection("DataBase Collection")]
+    public class MessageServicesTest
+    {
+        private readonly DatabaseFixure _fixure;
+        private readonly MessageServices _messageservices;
+        public MessageServicesTest(DatabaseFixure fixure)
         {
-            private readonly DatabaseFixure _fixure;
-            private readonly MessageServices _messageservices;
-            public MessageServicesTest(DatabaseFixure fixure)
-            {
-                _fixure = fixure;
+            _fixure = fixure;
             _messageservices = new MessageServices(_fixure._context);
-            }
-        //[Fact]
-        //public void Get_All_Test()
-        //{
-        //    var result = _messageservices.GetRoom();
-        //    //Act
-        //    var items = Assert.IsType<List<MessageResponse>>(result);
-        //    //Assert
-        //    Assert.Equal(2, items.Count);
-        //}
+        }
+        [Fact]
+        public void Get_All_Test()
+        {
+            //Arrange
+            var expect = _fixure._context.TblMessages.Count();
+
+            //Act
+            var result = _messageservices.GetRoom(1);
+            var items = Assert.IsType<List<MessageResponse>>(result);
+
+            //Assert
+            Assert.Equal(2, items.Count!);
+        }
 
         [Fact]
-        public void CheckNewwithCheckExtistUser()
+        public void Check_Exist_with_CheckExtistUser()
         {
             var user = new CreateMessageRequestModel()
             {
                 RoomId = 1,
-                Message = "welcome",
+                Message = "Hyy",
             };
             //Act
-            var result = _messageservices.AddMessages(user);
+            var result = _messageservices.CheckRoomId(1);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void check_New_with_checkExistUser()
+        {
+            //Arrrange
+            var user = new CreateMessageRequestModel()
+            {
+                RoomId = 3,
+                Message = "How Are You",
+            };
+
+            //Act
+            var result = _messageservices.AddMessages(7, "Fine", 3);
             BaseResponseModel expexted = new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
                 SuccessMessage = "Message send successfully"
             };
+
             //Assert
             Assert.Equal(result.SuccessMessage, expexted.SuccessMessage);
-                }
+
         }
+    }
 }
