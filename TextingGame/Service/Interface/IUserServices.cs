@@ -8,7 +8,7 @@ namespace Service.Interface
         List<ListUserRequestModel> GetUsers();
         bool CheckUserExist(string email);
         BaseResponseModel Register(CreateUserRequestmodel register);
-        BaseResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel);
+        LoginUserResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel);
         BaseResponseModel ForgetPassword(UserForgotPasswordRequestModel userForgotPasswordRequestModel);
         BaseResponseModel ValidateUserRequestModel(CreateUserRequestmodel createUserRequestmodel);
 

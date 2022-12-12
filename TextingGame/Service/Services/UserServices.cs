@@ -111,7 +111,7 @@ namespace Service.Services
         }
 
         //...........User Login.....................//
-        public BaseResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel)
+        public LoginUserResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel)
         {
             string encryptPassword = _encrypt.EncodePasswordToBase64(loginUserRequestModel.Password!);
             var login = _dbUserContext.TblUsers.Where(x => x.EmailId == loginUserRequestModel.EmailId && x.Password == encryptPassword).FirstOrDefault()!;
@@ -119,23 +119,26 @@ namespace Service.Services
             {
                 if (login != null)
                 {
-                    //var token = _genrateToken.GenerateToken(login);
-                    return new BaseResponseModel()
+                    var token = _genrateToken.GenerateToken(login);
+                    return new LoginUserResponseModel()
                     {
                         StatusCode = System.Net.HttpStatusCode.OK,
-                        SuccessMessage = "User Login SuccessFully"
+                        SuccessMessage = "User Login SuccessFully",
+                        userId = login.UserId,
+                        Token = token
                     };
                 }
-                return new BaseResponseModel()
+                return new LoginUserResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    ErrorMessage = "Invalid User"
+                    ErrorMessage = "Invalid User",
+                    userId = 0
                 };
 
             }
             catch (Exception ex)
             {
-                return new BaseResponseModel()
+                return new LoginUserResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
                     ErrorMessage = string.Format("Login user failed. Exception details are: {0}", ex.Message)
@@ -178,7 +181,7 @@ namespace Service.Services
                     ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
                 };
             }
-            
+
         }
     }
 }

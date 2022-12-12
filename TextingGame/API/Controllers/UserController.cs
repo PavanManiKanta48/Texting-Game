@@ -21,6 +21,8 @@ namespace API.Controllers
         [HttpGet]
         public List<ListUserRequestModel> GetUsers()
         {
+            //retrieve session variables here
+            var userid = HttpContext.Session.GetString(Constants.UserId);
             try
             {
                 return _userService.GetUsers().ToList();
@@ -57,15 +59,19 @@ namespace API.Controllers
         }
 
         [HttpPost("LogIn")]
-        public BaseResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel)
+        public LoginUserResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel)
         {
             try
             {
-                return _userService.UserLogIn(loginUserRequestModel);
+                LoginUserResponseModel response = _userService.UserLogIn(loginUserRequestModel);
+
+                //set session value
+                HttpContext.Session.SetString(Constants.UserId, response.userId.ToString());
+                return response;
             }
             catch (Exception ex)
             {
-                return new BaseResponseModel()
+                return new LoginUserResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
                     ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
