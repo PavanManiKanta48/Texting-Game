@@ -32,11 +32,15 @@ namespace XUnitTesting
         [Fact]
         public void GetAll_Test()
         {
-            var result = _services.GetUsers();
+            //Arrange
+            var expect = _fixure._context.TblUsers.Count();
+
             //Act
+            var result = _services.GetUsers();
             var items = Assert.IsType<List<ListUserRequestModel>>(result);
+
             //Assert
-            Assert.Equal(2, items.Count);
+            Assert.Equal(expect, items.Count);
         }
 
         //...........check exist user............//
@@ -51,7 +55,7 @@ namespace XUnitTesting
                 Password = "anshi12",
                 MobileNo = "7867765564"
             };
-           // _encrypt.Setup(x=>x.EncodePasswordToBase64(user.Password)).Returns(user.Password);
+            _encrypt.Setup(x=>x.EncodePasswordToBase64(user.Password)).Returns(user.Password);
 
             //Act
             var result = _services.CheckUserExist(user.EmailId);
@@ -118,7 +122,7 @@ namespace XUnitTesting
             _encrypt.Setup(method => method.EncodePasswordToBase64(user.Password)).Returns(user.Password);
             //Act
             var result = _services.CheckUserExist(user.EmailId);
-            Assert.False(result);
+            Assert.True(result);
         }
 
         //..........login with correct mail and password.........//

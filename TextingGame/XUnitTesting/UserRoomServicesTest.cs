@@ -1,12 +1,11 @@
-﻿using Persistence.Model;
+﻿using Domain;
+using Domain.UserRoomModel;
+using Persistence.Model;
 using Service.Services;
+using Xunit.Sdk;
 
 namespace XUnitTesting
 {
-    [CollectionDefinition("DataBase Collection")]
-    public class DatabaseCollection1 : ICollectionFixture<DatabaseFixure>
-    {
-    }
 
     [Collection("DataBase Collection")]
     public class UserRoomServicesTest
@@ -21,86 +20,90 @@ namespace XUnitTesting
         [Fact]
         public void Get_UserRoomsDetails()
         {
-            var result = _userservices.GetUsersRoom();
-            var items = Assert.IsType<List<TblUserRoom>>(result);
-            Assert.Equal(2, items.Count);
+            //Arrange
+            var expect = _fixure._context.TblUserRooms.Count();
+
+            //Act
+            var result = _userservices.GetUsersRoom(1);
+            var items = Assert.IsType<List<ListUserRoomResponse>>(result);
+
+            //Assert
+            Assert.Equal(expect, items.Count!);
         }
 
+
         [Fact]
-        public void Adding_newUserToRoom()
+        public void Check_New_with_CheckExtistUserRoom()
         {
             //Arrange
-            var addingtoRoom = new TblUserRoom()
+            var addingtoRoom = new CreateUserRoomRequestModel()
             {
-                UserRoomId = 3,
-                RoomId = 1,
-                UserId = 2,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                IsActive = true
+                RoomId = 2,
+                UserId = new int[] {1,2}
             };
+
             //Act
             var result = _userservices.AddUserToRoom(addingtoRoom);
-            var expected = "Room Added Successfull";
+            BaseResponseModel expexted = new BaseResponseModel()
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                 SuccessMessage = "user Room created successfully"
+                   };
+
             //Assert
-            Assert.True(result, expected);
+            Assert.Equal(result.SuccessMessage, expexted.SuccessMessage);
         }
         [Fact]
         public void Adding_ExsistingUserToRoom()
         {
             //Arrange
-            var addingtoRoom = new TblUserRoom()
+            var addingtoRoom = new CreateUserRoomRequestModel()
             {
-                UserRoomId = 3,
                 RoomId = 1,
-                UserId = 2,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                IsActive = true
+                UserId = new int[] {1,2}
             };
             //Act
-            var result = _userservices.AddUserToRoom(addingtoRoom);
-            var expected = "already existed";
+            var result = _userservices.CheckRoomId(1);
+         
             //Assert
-            Assert.True(result, expected);
-        }
-        [Fact]
-        public void Delete_ExistingUserFromRoom()
-        {
-            //Arrange
-            var deleteUser = new TblUserRoom()
-            {
-                UserRoomId = 5,
-                RoomId = 4,
-                UserId = 1,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                IsActive = true
-            };
-            //Act
-            var result = _userservices.DeleteUserFromRoom(deleteUser);
-            var expected = "Deleted from Room";
-            //Assert
-            Assert.True(result, expected);
+            Assert.True(result);
         }
         [Fact]
         public void Delete_newUserFromRoom()
         {
             //Arrange
-            var deleteUser = new TblUserRoom()
+            var deleteUser = new DeleteRoomRequsetModel()
             {
-                UserRoomId = 6,
-                RoomId = 4,
-                UserId = 3,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                IsActive = true
+                RoomId = 6,
+                UserId = new int[] {1,2}
             };
+
+            //Act
+            var result = _userservices.CheckRoomId(5);
+
+            //Assert
+            Assert.False(result);
+        }
+        [Fact]
+        public void Delete_ExistingUserFromRoom()
+        {
+            //Arrange
+            var deleteUser = new DeleteRoomRequsetModel()
+            {
+                RoomId = 1,
+                UserId = new int[] {1,2},
+            };
+
             //Act
             var result = _userservices.DeleteUserFromRoom(deleteUser);
-            var expected = "Deleted from Room";
+            BaseResponseModel expexted = new BaseResponseModel()
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                    SuccessMessage = "User Room deleted successfully"
+                  };
+
             //Assert
-            Assert.True(result, expected);
+            Assert.Equal(result.SuccessMessage, expexted.SuccessMessage);
         }
 
     }
