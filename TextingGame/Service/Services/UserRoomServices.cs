@@ -86,30 +86,26 @@ namespace Service.Services
         //..........Add User Room...................//
         public BaseResponseModel AddUserToRoom(CreateUserRoomRequestModel createUserRoomRequestModel,int userid)
         {
-            List<TblUserRoom> userRooms = _dbUserRoomContext.TblUserRooms.Where(r => r.RoomId == createUserRoomRequestModel.RoomId).ToList()!;
-            List<int> roomIds = new List<int>();
-       
-
-            //{
-            //    roomIds.Add((int)userRoom.UserId!);
-            //}
-            //int index = random.Next(userRooms.Count);
-             List<TblUserRoom> tblUserRooms = new List<TblUserRoom>();
-           foreach (var userId in createUserRoomRequestModel.UserId!)
-                {
+            List<TblUserRoom> tblUserRooms = new List<TblUserRoom>();
+            int count = 0;
+            List<int> randomIds = createUserRoomRequestModel.UserId!.OrderBy(a => Guid.NewGuid()).ToList();
+            foreach (var userId in createUserRoomRequestModel.UserId!)
+            {
                 tblUserRooms.Add(new TblUserRoom
                 {
                     RoomId = createUserRoomRequestModel.RoomId,
                     UserId = userId,
                     IsActive = true,
-                    ImpersonatedUserId = 2,
-                     Score = 0,
+                    ImpersonatedUserId = randomIds[count],
+                    Score = 0,
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
-                    CreatedBy = userid,  //session 
-                    UpdatedBy = userid  //session 
-                }); 
-                }
+                    CreatedBy = 2,
+                    UpdatedBy = 1
+                });
+                count++;
+            }
+        
             try
             {
                     _dbUserRoomContext.TblUserRooms.AddRange(tblUserRooms);
