@@ -8,7 +8,7 @@ namespace Service.Interface
         List<ListUserRoomResponse> GetUsersRoom(int roomId);
         //bool AddUserToRoom(TblUserRoom addUser);
         bool CheckUserId(int[]? checkUser);
-        bool CheckRoomId(int? checkroom);
+        bool CheckRoomId(int? checkroom);       
         BaseResponseModel DeleteUserFromRoom(DeleteRoomRequsetModel deleteRoomRequsetModel);
         BaseResponseModel ValidateUserRequestModel(DeleteRoomRequsetModel deleteRoomRequsetModel);
         BaseResponseModel ValidateUserRequestModel(CreateUserRoomRequestModel createUserRoomRequestModel);

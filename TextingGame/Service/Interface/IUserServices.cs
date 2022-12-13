@@ -11,6 +11,5 @@ namespace Service.Interface
         LoginUserResponseModel UserLogIn(LoginUserRequestModel loginUserRequestModel);
         BaseResponseModel ForgetPassword(UserForgotPasswordRequestModel userForgotPasswordRequestModel);
         BaseResponseModel ValidateUserRequestModel(CreateUserRequestmodel createUserRequestmodel);
-
     }
 }

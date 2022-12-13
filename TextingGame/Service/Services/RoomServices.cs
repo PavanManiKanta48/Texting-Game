@@ -37,72 +37,86 @@ namespace Service.Services
         }
 
         //.........Check room Exist...........//
-        public BaseResponseModel ValidateUserRequestModel(CreateRoomRequestModel createRoomRequestModel)
-        {
-            if (CheckExistRoomName(createRoomRequestModel.RoomName))
-            {
-                return new BaseResponseModel()
-                {
-                    StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    ErrorMessage = "Room Already Exists"
-                };
-            }
-            return new BaseResponseModel()
-            {
-                StatusCode = System.Net.HttpStatusCode.OK,
-            };
-        }
+        //public BaseResponseModel ValidateUserRequestModel(CreateRoomRequestModel createRoomRequestModel)
+        //{
+        //    if (CheckExistRoomName(createRoomRequestModel.RoomName))
+        //    {
+        //        return new BaseResponseModel()
+        //        {
+        //            StatusCode = System.Net.HttpStatusCode.BadRequest,
+        //            ErrorMessage = "Room Already Exists"
+        //        };
+        //    }
+        //    return new BaseResponseModel()
+        //    {
+        //        StatusCode = System.Net.HttpStatusCode.OK,
+        //    };
+        //}
 
         public bool CheckExistRoomName(string room)
         {
             var check = _dbRoomContext.TblRooms.Where(x => x.RoomName == room).FirstOrDefault()!;
-            if (check != null)
+            //return check != null;
+            if(check != null)
+            {
                 return true;
-            else
-                return false;
+            }
+            return false;
+              
         }
 
         //...........Create Room..........//
         public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
         {
 
-            TblRoom room = new TblRoom()
-            {
-                RoomName = createRoomRequestModel.RoomName,
-                NumOfPeopele = createRoomRequestModel.NoOfPeoples,
-                IsActive = true,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                CreatedBy = 2,
-                UpdatedBy = 1
-            };
-            _dbRoomContext.TblRooms.Add(room);
             try
             {
-                _dbRoomContext.SaveChanges();
+                bool check = CheckExistRoomName(createRoomRequestModel.RoomName);
+                if (check == false)
+                {
+                    TblRoom room = new TblRoom()
+                    {
+                        RoomName = createRoomRequestModel.RoomName,
+                        NumOfPeopele = createRoomRequestModel.NoOfPeoples,
+                        IsActive = true,
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now,
+                        CreatedBy = 2,
+                        UpdatedBy = 1
+                    };
+                    _dbRoomContext.TblRooms.Add(room);
+                    _dbRoomContext.SaveChanges();
+                    return new BaseResponseModel()
+                    {
+                        StatusCode = System.Net.HttpStatusCode.OK,
+                        SuccessMessage = "Room created successfully"
+                    };
+                }
                 return new BaseResponseModel()
                 {
-                    StatusCode = System.Net.HttpStatusCode.OK,
-                    SuccessMessage = "Room created successfully"
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "Room Already Exists"
                 };
             }
+
             catch (Exception ex)
             {
                 return new BaseResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}",ex.Message)
                 };
             }
+            
         }
 
         // .........Check Room Id Exist............//
-        public bool CheckExistRoomId(TblRoom room)
-        {
-            var room1 = _dbRoomContext.TblRooms.Where(x => x.RoomId == room.RoomId).FirstOrDefault();
-            return room1 != null;
+        //public bool CheckExistRoomId(TblRoom room)
+        //{
+        //    var room1 = _dbRoomContext.TblRooms.Where(x => x.RoomId == room.RoomId).FirstOrDefault();
+        //    return room1 != null;
 
-        }
+        //}
 
         // ............Update Room.............//
         public BaseResponseModel UpdateRoom(EditRoomRequestModel editRoomRequestModel)
@@ -119,8 +133,6 @@ namespace Service.Services
                     roomUpdate.UpdatedBy = 3;
                     roomUpdate.IsActive = true;
                     _dbRoomContext.Entry(roomUpdate).State = EntityState.Modified;
-
-
                     _dbRoomContext.SaveChanges();
                     return new BaseResponseModel()
                     {
@@ -128,7 +140,6 @@ namespace Service.Services
                         SuccessMessage = "Room Updated successfully"
                     };
                 }
-
                 return new BaseResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
@@ -144,12 +155,7 @@ namespace Service.Services
                 };
             }
 
-        }
-        public string GenerateRoomCode(int Id)
-        {
-            TblRoom room = _dbRoomContext.TblRooms.Where(x => x.RoomId == Id).FirstOrDefault()!;
-            return "RM-" + room.RoomName + "-" + room.RoomId;
-        }
+        }       
 
         //..............Sending Sms.............//
         public BaseResponseModel SendSms(double phone, string message)

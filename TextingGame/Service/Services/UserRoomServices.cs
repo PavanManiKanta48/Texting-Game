@@ -8,6 +8,7 @@ namespace Service.Services
     public class UserRoomServices : IUserRoomServices
     {
         private readonly DbTextingGameContext _dbUserRoomContext;
+        private readonly Random random = new Random();
 
         public UserRoomServices(DbTextingGameContext dbContext)
         {
@@ -25,8 +26,8 @@ namespace Service.Services
                                                     {
                                                         RoomId = userRoom.RoomId,
                                                         UserId = users.UserId,
-
                                                     }).ToList();
+            
             if (userRooms.Any())
             {
                 return userRooms;
@@ -59,72 +60,94 @@ namespace Service.Services
         public bool CheckRoomId(int? checkroom)
         {
             var checkMessageRoomId = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == checkroom).FirstOrDefault();
-            if (checkMessageRoomId != null)
-                return true;
-            else
-                return false;
-        }
+            return checkMessageRoomId != null;
+            //if (checkMessageRoomId != null)
+            //    return true;
+            //else
+            //    return false;
+        }       
         public BaseResponseModel ValidateUserRequestModel(CreateUserRoomRequestModel createUserRoomRequestModel)
         {
-            if (CheckRoomId(createUserRoomRequestModel.RoomId))
+            List<TblUserRoom> userRooms = _dbUserRoomContext.TblUserRooms.Where(r => r.RoomId == createUserRoomRequestModel.RoomId).ToList()!;
+            if (!CheckRoomId(createUserRoomRequestModel.RoomId))
             {
-                if (CheckUserId(createUserRoomRequestModel.UserId))
+                return new BaseResponseModel()
                 {
-                    return new BaseResponseModel()
-                    {
-                        StatusCode = System.Net.HttpStatusCode.OK,
-                        SuccessMessage = "user join roon succesfuly"
-                    };
-                }
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "Room id is not valid"
+                };
+            }
+            if (!CheckUserId(createUserRoomRequestModel.UserId))
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    ErrorMessage = "user id not valid"
+                };
+            }  
+            if(userRooms.Count<=5)
+            {
+                return new BaseResponseModel()
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    SuccessMessage = "user joined successfully"
+                };
             }
             return new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.BadRequest,
-                ErrorMessage = "user id and room id is not matched"
+                SuccessMessage = "Nof Of people Reached 5"
             };
         }
         //..........Add User Room...................//
         public BaseResponseModel AddUserToRoom(CreateUserRoomRequestModel createUserRoomRequestModel)
         {
-            TblRoom room = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == createUserRoomRequestModel.RoomId).FirstOrDefault()!;
+            //TblRoom room = _dbUserRoomContext.TblRooms.Where(r => r.RoomId == createUserRoomRequestModel.RoomId).FirstOrDefault()!;
             List<TblUserRoom> userRooms = _dbUserRoomContext.TblUserRooms.Where(r => r.RoomId == createUserRoomRequestModel.RoomId).ToList()!;
-            List<TblUserRoom> room1 = new List<TblUserRoom>();
+
+            List<int> roomIds = new List<int>();
+            foreach(var userRoom in userRooms)
+            {
+                roomIds.Add((int)userRoom.UserId!);
+            }
+            int index = random.Next(userRooms.Count);
+
+            List<TblUserRoom> tblUserRooms = new List<TblUserRoom>();
             foreach (var userId in createUserRoomRequestModel.UserId!)
             {
-                room1.Add(new TblUserRoom
+                tblUserRooms.Add(new TblUserRoom
                 {
                     RoomId = createUserRoomRequestModel.RoomId,
                     UserId = userId,
                     IsActive = true,
-                    ImpersonatedUserId = 2,
-                    Score = 4.5,
+                    ImpersonatedUserId = roomIds[index],
+                    Score = 0,
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
-                    CreatedBy = 2,
-                    UpdatedBy = 1
+                    CreatedBy = 2,  //session 
+                    UpdatedBy = 1   //session 
                 });
-            }
-
+            }           
             try
             {
-                if (userRooms.Count <= room.NumOfPeopele)
-                {
-                    _dbUserRoomContext.TblUserRooms.AddRange(room1);
+                //if (userRooms.Count <= room.NumOfPeopele)
+                //{
+                    _dbUserRoomContext.TblUserRooms.AddRange(tblUserRooms);
                     _dbUserRoomContext.SaveChanges();
                     return new BaseResponseModel()
                     {
                         StatusCode = System.Net.HttpStatusCode.OK,
                         SuccessMessage = "user Room created successfully"
                     };
-                }
-                else
-                {
-                    return new BaseResponseModel()
-                    {
-                        StatusCode = System.Net.HttpStatusCode.BadRequest,
-                        ErrorMessage = "limit is exceed",
-                    };
-                }
+                //}
+                //else
+                //{
+                    //return new BaseResponseModel()
+                    //{
+                    //    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    //    ErrorMessage = "limit is exceed",
+                    //};
+                //}
             }
             catch (Exception ex)
             {
