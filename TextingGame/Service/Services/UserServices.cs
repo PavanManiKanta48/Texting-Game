@@ -65,10 +65,7 @@ namespace Service.Services
         public bool CheckUserExist(string email)
         {
             var user = _dbUserContext.TblUsers.Where(x => x.EmailId == email).FirstOrDefault();
-            if (user != null)
-                return true;
-            else
-                return false;
+            return user != null;
         }
 
         //............Check Password .................//

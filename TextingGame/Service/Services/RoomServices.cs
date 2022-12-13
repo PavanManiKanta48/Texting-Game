@@ -36,37 +36,15 @@ namespace Service.Services
             return new List<RoomResponse>();
         }
 
-        //.........Check room Exist...........//
-        //public BaseResponseModel ValidateUserRequestModel(CreateRoomRequestModel createRoomRequestModel)
-        //{
-        //    if (CheckExistRoomName(createRoomRequestModel.RoomName))
-        //    {
-        //        return new BaseResponseModel()
-        //        {
-        //            StatusCode = System.Net.HttpStatusCode.BadRequest,
-        //            ErrorMessage = "Room Already Exists"
-        //        };
-        //    }
-        //    return new BaseResponseModel()
-        //    {
-        //        StatusCode = System.Net.HttpStatusCode.OK,
-        //    };
-        //}
-
         public bool CheckExistRoomName(string room)
         {
             var check = _dbRoomContext.TblRooms.Where(x => x.RoomName == room).FirstOrDefault()!;
             //return check != null;
-            if(check != null)
-            {
-                return true;
-            }
-            return false;
-              
+            return check != null;
         }
 
         //...........Create Room..........//
-        public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
+        public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel,int userid)
         {
 
             try
@@ -81,8 +59,8 @@ namespace Service.Services
                         IsActive = true,
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now,
-                        CreatedBy = 2,
-                        UpdatedBy = 1
+                        CreatedBy = userid,
+                        UpdatedBy = userid
                     };
                     _dbRoomContext.TblRooms.Add(room);
                     _dbRoomContext.SaveChanges();
@@ -104,19 +82,11 @@ namespace Service.Services
                 return new BaseResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}",ex.Message)
+                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
                 };
             }
             
         }
-
-        // .........Check Room Id Exist............//
-        //public bool CheckExistRoomId(TblRoom room)
-        //{
-        //    var room1 = _dbRoomContext.TblRooms.Where(x => x.RoomId == room.RoomId).FirstOrDefault();
-        //    return room1 != null;
-
-        //}
 
         // ............Update Room.............//
         public BaseResponseModel UpdateRoom(EditRoomRequestModel editRoomRequestModel)

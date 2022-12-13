@@ -10,7 +10,7 @@ namespace Service.Services
         public bool SendMessage(double phone, string Message)
         {
             var accountSid = "ACecc917f0826093e44d8afae64d657514";
-            var authToken = "4e1e09d11178bdc93a0be1303f4ddc61";
+            var authToken = "64ef9525e74176b9180d822e078528ea";
             TwilioClient.Init(accountSid, authToken);
             string phone1 = Convert.ToString(phone);
             string countryid = "+91";

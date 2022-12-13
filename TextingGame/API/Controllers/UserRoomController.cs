@@ -36,6 +36,7 @@ namespace API.Controllers
         [HttpPost("AddUserToRoom")]
         public BaseResponseModel ValidateUserRequestModel(CreateUserRoomRequestModel createUserRoomRequestModel)
         {
+            var userid = Convert.ToInt32(HttpContext.Session.GetString(Constants.UserId));
             try
             {
                 BaseResponseModel errorModel = _userRoomServices.ValidateUserRequestModel(createUserRoomRequestModel);
@@ -43,7 +44,7 @@ namespace API.Controllers
                 {
                     return errorModel;
                 }
-                return _userRoomServices.AddUserToRoom(createUserRoomRequestModel);
+                return _userRoomServices.AddUserToRoom(createUserRoomRequestModel,userid);
 
             }
             catch (Exception ex)

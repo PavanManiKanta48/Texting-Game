@@ -42,14 +42,10 @@ namespace API.Controllers
         [HttpPost]
         public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel)
         {
+            var userid = Convert.ToInt32 (HttpContext.Session.GetString(Constants.UserId));
             try
             {
-                //BaseResponseModel errorModel = _roomServices.ValidateUserRequestModel(createRoomRequestModel);
-                //if (errorModel.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                //{
-                //    return errorModel;
-                //}
-                return _roomServices.CreateRoom(createRoomRequestModel);
+                return _roomServices.CreateRoom(createRoomRequestModel,userid);
 
             }
             catch (Exception ex)
