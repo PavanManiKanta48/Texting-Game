@@ -24,7 +24,7 @@ namespace Service.Services
                                                select new MessageResponse()
                                                {
                                                    Timestamp = msgRoom.CreatedDate,
-                                                   FirstName = users.UserName,
+                                                   FirstName = users.UserName!,
                                                    Message = msgRoom.Message
                                                }).ToList();
             if (userRooms.Any())
@@ -38,10 +38,7 @@ namespace Service.Services
         public bool CheckUserId(int userId)
         {
             var checkMessageUserId = _dbMessageContext.TblUsers.Where(r => r.UserId == userId).FirstOrDefault();
-            if (checkMessageUserId != null)
-                return true;
-            else
-                return false;
+            return checkMessageUserId != null;
         }
 
         //............Check Room Id ..................//
@@ -49,25 +46,22 @@ namespace Service.Services
         public bool CheckRoomId(int roomId)
         {
             var checkMessageRoomId = _dbMessageContext.TblRooms.Where(r => r.RoomId == roomId).FirstOrDefault();
-            if (checkMessageRoomId != null)
-                return true;
-            else
-                return false;
+            return checkMessageRoomId != null;
         }
 
         //..................User Add Message...................//
-        public BaseResponseModel AddMessages(int RoomID, string Message, int UserId)
+        public BaseResponseModel AddMessages(int RoomID, string Message, int UserId,int userid)
         {
             TblMessage message = new TblMessage()
             {
                 Message = Message,
                 UserId = UserId,
                 RoomId = RoomID,
+                IsActive = true,
                 CreatedDate = DateTime.Now,
-                CreatedBy = 2,
-                UpdatedBy = 2,
                 UpdatedDate = DateTime.Now,
-                IsActive = true
+                CreatedBy = userid,
+                UpdatedBy = userid,
             };
             _dbMessageContext.TblMessages.Add(message);
             try

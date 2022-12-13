@@ -37,6 +37,7 @@ namespace API.Controllers
         [HttpPost("AddUserMessage")]
         public BaseResponseModel AddingMessage(int RoomId, string Message, int UserId)
         {
+            var userid = Convert.ToInt32(HttpContext.Session.GetString(Constants.UserId));
             try
             {
                 var CheckRoom = _messageServices.CheckRoomId(RoomId);
@@ -49,9 +50,8 @@ namespace API.Controllers
                         SuccessMessage = "RoomId Not Matched"
                     };
                 }
-                return _messageServices.AddMessages(RoomId, Message, UserId);
-
-            }
+                return _messageServices.AddMessages(RoomId, Message, UserId,userid);
+          }
             catch (Exception ex)
             {
                 throw new(ex.Message);

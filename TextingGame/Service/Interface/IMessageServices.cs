@@ -8,6 +8,6 @@ namespace Service.Interface
         List<MessageResponse> GetRoom(int Roomid);
         bool CheckUserId(int userId);
         bool CheckRoomId(int roomId);
-        BaseResponseModel AddMessages(int RoomID, string Message, int UserId);
+        BaseResponseModel AddMessages(int RoomID, string Message, int UserId,int userid);
     }
 }
