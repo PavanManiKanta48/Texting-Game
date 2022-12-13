@@ -54,7 +54,7 @@ namespace Service.Services
                     StatusCode = System.Net.HttpStatusCode.OK,
                     SuccessMessage = "User Guess succesfully"
                 };
-             }
+            }
             return new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.BadRequest,

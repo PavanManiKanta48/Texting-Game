@@ -44,11 +44,11 @@ namespace API.Controllers
         {
             try
             {
-                BaseResponseModel errorModel = _roomServices.ValidateUserRequestModel(createRoomRequestModel);
-                if (errorModel.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    return errorModel;
-                }
+                //BaseResponseModel errorModel = _roomServices.ValidateUserRequestModel(createRoomRequestModel);
+                //if (errorModel.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                //{
+                //    return errorModel;
+                //}
                 return _roomServices.CreateRoom(createRoomRequestModel);
 
             }

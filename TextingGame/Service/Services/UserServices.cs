@@ -30,8 +30,6 @@ namespace Service.Services
                                                      EmailId = user.EmailId,
                                                      MobileNo = user.MobileNo,
                                                  }).ToList();
-
-
             if (result.Any())
             {
                 return result;
@@ -120,6 +118,7 @@ namespace Service.Services
                 if (login != null)
                 {
                     var token = _genrateToken.GenerateToken(login);
+
                     return new LoginUserResponseModel()
                     {
                         StatusCode = System.Net.HttpStatusCode.OK,
@@ -127,6 +126,7 @@ namespace Service.Services
                         userId = login.UserId,
                         Token = token
                     };
+                   
                 }
                 return new LoginUserResponseModel()
                 {
@@ -170,15 +170,13 @@ namespace Service.Services
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
                     ErrorMessage = "Email Does Not Register"
                 };
-
-
             }
             catch (Exception ex)
             {
                 return new BaseResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
+                    ErrorMessage = string.Format("password reset failed. Exception details are: {0}", ex.Message)
                 };
             }
 

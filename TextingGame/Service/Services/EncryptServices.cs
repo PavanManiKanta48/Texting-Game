@@ -12,6 +12,7 @@ namespace Service.Services
             string encodedData = Convert.ToBase64String(encData_byte);
             return encodedData;
         }
+
         //.......Decrypt Form...........//
         public string DecodeFrom64(string encodedData)
         {
