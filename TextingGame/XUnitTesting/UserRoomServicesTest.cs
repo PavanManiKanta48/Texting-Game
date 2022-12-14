@@ -43,7 +43,7 @@ namespace XUnitTesting
             };
 
             //Act
-            var result = _userservices.AddUserToRoom(addingtoRoom);
+            var result = _userservices.AddUserToRoom(addingtoRoom,1);
             BaseResponseModel expexted = new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.OK,

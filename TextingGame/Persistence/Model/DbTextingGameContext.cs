@@ -15,8 +15,6 @@ public partial class DbTextingGameContext : DbContext
     {
     }
 
-    public virtual DbSet<RoomDisplay> RoomDisplays { get; set; }
-
     public virtual DbSet<TblMessage> TblMessages { get; set; }
 
     public virtual DbSet<TblRoom> TblRooms { get; set; }
@@ -31,16 +29,6 @@ public partial class DbTextingGameContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<RoomDisplay>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("RoomDisplay");
-
-            entity.Property(e => e.RoomName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-        });
 
         modelBuilder.Entity<TblMessage>(entity =>
         {

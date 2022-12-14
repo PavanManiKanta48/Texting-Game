@@ -1,7 +1,11 @@
-﻿using Domain.GuessUser;
+﻿using Domain;
+using Domain.GuessUser;
+using Domain.RoomModel;
+using Domain.UserRoomModel;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Model;
 using Service.Interface;
+using Service.Services;
 
 namespace API.Controllers
 {
@@ -18,17 +22,32 @@ namespace API.Controllers
             _GuessServices = guessServices;
         }
 
-        //[HttpGet]
-        //public List<ListOfResultResponse> GetGuess()
-        //{
-        //    try
-        //    {
-        //        _GuessServices.GetGuess().ToList();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new(ex.Message);
-        //    }
-        //}
+        [HttpGet]
+        public List<ListOfResultResponse> GetGuess(int roomId)
+        {
+            try
+            {
+                return roomId == 0 ? new List<ListOfResultResponse>() : _GuessServices.GetGuess(roomId);
+            }
+            catch (Exception ex)
+            {
+                throw new(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public BaseResponseModel createGuess(CreateGuessUserRequestModel createGuessUserRequestModel)
+        {
+            try
+            {
+                return _GuessServices.AddGuessUser(createGuessUserRequestModel);
+
+            }
+            catch (Exception ex)
+            {
+                throw new(ex.Message);
+            }
+        }
+
     }
 }

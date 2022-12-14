@@ -32,7 +32,7 @@ namespace XUnitTesting
             var items = Assert.IsType<List<MessageResponse>>(result);
 
             //Assert
-            Assert.Equal(2, items.Count!);
+            Assert.Equal(expect, items.Count!);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace XUnitTesting
             };
 
             //Act
-            var result = _messageservices.AddMessages(7, "Fine", 3);
+            var result = _messageservices.AddMessages(7, "Fine", 3,1);
             BaseResponseModel expexted = new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
