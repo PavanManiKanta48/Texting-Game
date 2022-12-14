@@ -1,5 +1,5 @@
                              Texting Game
-INTRODUCTING:-   We Created a Web API for sending messages in a group and other persons in the group can guess who send the message, its a simple and a funny game  this is designed for the who loves texting.
+INTRODUCTION:-   We Created a Web API for sending messages in a group and other persons in the group can guess who send the message, its a simple and a funny game  this is designed for the who loves texting.
 We use Clean architecture and Entity Framework  for our application.
 Steps you need to Follow to use our web api  :-
 1st Register to our application  
