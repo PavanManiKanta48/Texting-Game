@@ -38,15 +38,13 @@ namespace Service.Services
 
         public bool CheckExistRoomName(string room)
         {
-            var check = _dbRoomContext.TblRooms.Where(x => x.RoomName == room).FirstOrDefault()!;
-            //return check != null;
+            var check = _dbRoomContext.TblRooms.Where(x => x.RoomName == room).FirstOrDefault()!;            
             return check != null;
         }
 
         //...........Create Room..........//
         public BaseResponseModel CreateRoom(CreateRoomRequestModel createRoomRequestModel,int userid)
         {
-
             try
             {
                 bool check = CheckExistRoomName(createRoomRequestModel.RoomName);
@@ -55,7 +53,6 @@ namespace Service.Services
                     TblRoom room = new TblRoom()
                     {
                         RoomName = createRoomRequestModel.RoomName,
-                        NumOfPeopele = createRoomRequestModel.NoOfPeoples,
                         IsActive = true,
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now,
@@ -124,7 +121,6 @@ namespace Service.Services
                     ErrorMessage = string.Format("Creating an user failed. Exception details are: {0}", ex.Message)
                 };
             }
-
         }       
 
         //..............Sending Sms.............//

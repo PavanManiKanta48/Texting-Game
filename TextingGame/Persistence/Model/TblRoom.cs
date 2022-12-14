@@ -1,12 +1,13 @@
-﻿namespace Persistence.Model;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Persistence.Model;
 
 public partial class TblRoom
 {
     public int RoomId { get; set; }
 
     public string RoomName { get; set; } = null!;
-
-    public int? NumOfPeopele { get; set; }
 
     public bool IsActive { get; set; }
 

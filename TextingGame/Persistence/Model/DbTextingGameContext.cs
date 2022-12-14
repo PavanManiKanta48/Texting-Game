@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Model;
 
@@ -13,6 +15,8 @@ public partial class DbTextingGameContext : DbContext
     {
     }
 
+    public virtual DbSet<RoomDisplay> RoomDisplays { get; set; }
+
     public virtual DbSet<TblMessage> TblMessages { get; set; }
 
     public virtual DbSet<TblRoom> TblRooms { get; set; }
@@ -21,8 +25,23 @@ public partial class DbTextingGameContext : DbContext
 
     public virtual DbSet<TblUserRoom> TblUserRooms { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server = 65.0.181.176;Database=db_TextingGame;User Id = admin;Password = Asdf1234*;TrustServerCertificate=True;Connection Timeout=300;command timeout=300 ");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<RoomDisplay>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("RoomDisplay");
+
+            entity.Property(e => e.RoomName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<TblMessage>(entity =>
         {
             entity.HasKey(e => e.MessageId).HasName("PK__tbl_Mess__C87C0C9C88A4489B");

@@ -1,4 +1,7 @@
-﻿namespace Persistence.Model;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Persistence.Model;
 
 public partial class TblMessage
 {
