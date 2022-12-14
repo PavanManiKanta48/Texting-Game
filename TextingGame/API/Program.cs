@@ -27,6 +27,7 @@ builder.Services.AddScoped<IEncryptServices, EncryptServices>();
 builder.Services.AddScoped<IRoomServices, RoomServices>();
 builder.Services.AddScoped<IUserRoomServices, UserRoomServices>();
 builder.Services.AddScoped<IMessageServices, MessageServices>();
+builder.Services.AddScoped<IGuessServices, GuessServices>();
 builder.Services.AddScoped<ISendingSms, SendingSms>();
 builder.Services.AddScoped<IGenrateToken, GenrateToken>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

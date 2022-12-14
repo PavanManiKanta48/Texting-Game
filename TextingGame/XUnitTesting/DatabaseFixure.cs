@@ -27,8 +27,8 @@ namespace XUnitTesting
             _context.SaveChanges();
             var user1 = new List<TblRoom>()
             {
-                new TblRoom(){RoomId = 1,RoomName = "FunGame",NumOfPeopele = 8,CreatedDate = DateTime.Now,UpdatedDate = DateTime.Now,IsActive = true,CreatedBy = 2,UpdatedBy = 1},
-                new TblRoom(){RoomId = 2,RoomName = "TextGame",NumOfPeopele = 10,CreatedDate = DateTime.Now,UpdatedDate= DateTime.Now,IsActive = true}
+                new TblRoom(){RoomId = 1,RoomName = "FunGame",CreatedDate = DateTime.Now,UpdatedDate = DateTime.Now,IsActive = true,CreatedBy = 2,UpdatedBy = 1},
+                new TblRoom(){RoomId = 2,RoomName = "TextGame",CreatedDate = DateTime.Now,UpdatedDate= DateTime.Now,IsActive = true,CreatedBy = 2,UpdatedBy = 1}
             };
             _context.TblRooms.AddRange(user1);
             _context.SaveChanges();

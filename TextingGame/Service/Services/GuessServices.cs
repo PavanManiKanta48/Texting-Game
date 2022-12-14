@@ -18,7 +18,7 @@ namespace Service.Services
         {
             _dbGuessContext = dbGuessContext;
         }
-        public List<ListOfResultResponse> GetGuess()
+        public List<ListOfResultResponse> GetGuess(int roomid)
         {
             List<ListOfResultResponse> guess = (from userRoom in _dbGuessContext.TblUserRooms
                                                 join users in _dbGuessContext.TblUsers on userRoom.UserId equals users.UserId
@@ -27,7 +27,7 @@ namespace Service.Services
                                                 //where userRoom.RoomId == roomId
                                                 select new ListOfResultResponse()
                                                 {
-                                                    RoomId = userRoom.RoomId,
+                                                    RoomId = userRoom.RoomId ?? 0,
                                                     UserName = users.UserName,
                                                     Guess = userrooms.Score,
                                                 }).ToList();
@@ -40,10 +40,7 @@ namespace Service.Services
         public bool CheckUserExist(int? userId)
         {
             var user = _dbGuessContext.TblUsers.Where(x => x.UserId == userId).FirstOrDefault();
-            if (user != null)
-                return true;
-            else
-                return false;
+           return user != null;
         }
         public BaseResponseModel validateUserRequestModel(CreateGuessUserRequestModel createGuessUserRequestModel)
         { 
@@ -75,7 +72,7 @@ namespace Service.Services
                 return new BaseResponseModel()
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    SuccessMessage = "User created successfully"
+                    SuccessMessage = "User guess successfully"
                 };
             }
             catch (Exception ex)

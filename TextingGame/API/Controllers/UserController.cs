@@ -22,7 +22,8 @@ namespace API.Controllers
         public List<ListUserRequestModel> GetUsers()
         {
             //retrieve session variables here
-            var userid = HttpContext.Session.GetString(Constants.UserId);
+            
+
             try
             {
                 return _userService.GetUsers().ToList();

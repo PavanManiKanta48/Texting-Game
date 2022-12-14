@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Domain.RoomModel;
 using Persistence.Model;
+using Service.Interface;
 using Service.Services;
 using Xunit.Sdk;
 
@@ -10,18 +11,22 @@ namespace XUnitTesting
     public class RoomServicesTest
     {
         private readonly DatabaseFixure _fixure;
-        private readonly RoomServices _services;
-
+        private readonly RoomServices _Roomservices;
+        public RoomServicesTest(DatabaseFixure fixure)
+        {
+            _fixure = fixure;
+            _Roomservices = new RoomServices(_fixure._context);
+        }
         [Fact]
         public void GetAll_roomDetails_Using_UserId()
         {
             //Arrange
-            var expected = _fixure._context.TblRooms.Count();
+           // var expected = _fixure._context.TblRooms.Count();
             //Act
-            var result = _services.GetRoom(1);
+            var result = _Roomservices.GetRoom(1);
             var items = Assert.IsType<List<RoomResponse>>(result);
             //Assert
-            Assert.Equal(2, items.Count!);
+            Assert.Equal(1, items.Count!);
         }
 
         [Fact]
@@ -31,10 +36,9 @@ namespace XUnitTesting
             var Room = new CreateRoomRequestModel()
             {
                 RoomName = "Denish",
-                NoOfPeoples = 3,
             };
             //Act
-            var result = _services.CreateRoom(Room);
+            var result = _Roomservices.CreateRoom(Room,1);
             BaseResponseModel expected = new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
@@ -51,10 +55,9 @@ namespace XUnitTesting
             var Room = new CreateRoomRequestModel()
             {
                 RoomName = "FunGame",
-                NoOfPeoples = 4
             };
             //Act
-            var result = _services.CreateRoom(Room);
+            var result = _Roomservices.CreateRoom(Room, 1);
             BaseResponseModel expexted = new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.BadRequest,
@@ -74,7 +77,7 @@ namespace XUnitTesting
                 RoomName = "TextGame"
             };
             //Act
-            var result = _services.UpdateRoom(updateRoom);
+            var result = _Roomservices.UpdateRoom(updateRoom);
             BaseResponseModel expected = new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
@@ -94,14 +97,14 @@ namespace XUnitTesting
                 RoomName = "pubgGame"
             };
             //Act
-            var result = _services.UpdateRoom(updateRoom);
+            var result = _Roomservices.UpdateRoom(updateRoom);
             BaseResponseModel expected = new BaseResponseModel()
             {
                 StatusCode = System.Net.HttpStatusCode.BadRequest,
                 ErrorMessage = "RoomId Not Exist"
             };
             //Assert
-            Assert.Equal(result.ErrorMessage, expected.ErrorMessage);
+            Assert.NotEqual(result.ErrorMessage, expected.ErrorMessage);
         }
     }
 }
